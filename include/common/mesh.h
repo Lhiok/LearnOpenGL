@@ -18,47 +18,54 @@ struct Vertex
     glm::vec3 TexCoords; // 纹理坐标
 };
 
-class mesh
+class Mesh
 {
 private:
-    GLuint VAO, VBO, EBO;
-    std::vector<Vertex> vertices; // 顶点信息
-    std::vector<unsigned int> indices; // 顶点索引
-    std::vector<Texture> textures; // 纹理
+    GLuint _VAO, _VBO, _EBO;
+    std::vector<Vertex> _vertices; // 顶点信息
+    std::vector<unsigned int> _indices; // 顶点索引
+    std::vector<Texture*> _textures; // 纹理
     void setupMesh();
 public:
-    mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures);
-    ~mesh();
+    Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures);
+    ~Mesh();
     void draw(Shader shader);
 };
 
-mesh::mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures)
 {
-    this->vertices = vertices;
-    this->indices = indices;
-    this->textures = textures;
+    this->_vertices = vertices;
+    this->_indices = indices;
+    this->_textures = textures;
     setupMesh();
 }
 
-mesh::~mesh()
+Mesh::~Mesh()
 {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    for (unsigned int i = 0; i < textures.size(); i++)
+    glDeleteVertexArrays(1, &_VAO);
+    glDeleteBuffers(1, &_VBO);
+    glDeleteBuffers(1, &_EBO);
+    for (unsigned int i = 0; i < _textures.size(); i++)
     {
-        glDeleteTextures(1, &textures[i].id);
+        delete _textures[i];
     }
+    _vertices.clear();
+    _indices.clear();
+    _textures.clear();
+    _vertices.shrink_to_fit();
+    _indices.shrink_to_fit();
+    _textures.shrink_to_fit();
 }
 
-void mesh::draw(Shader shader)
+void Mesh::draw(Shader shader)
 {
     unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
-    for (unsigned int i = 0; i < textures.size(); i++)
+    for (unsigned int i = 0; i < _textures.size(); i++)
     {
+        Texture *tex = _textures[i];
         std::string number;
-        std::string name = textures[i].type;
+        std::string name = tex->getName();
         if (name == "texture_diffuse")
         {
             number = std::to_string(diffuseNr++);
@@ -70,33 +77,33 @@ void mesh::draw(Shader shader)
         // 激活纹理单元
         glActiveTexture(GL_TEXTURE0 + i);
         // 绑定纹理
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+        glBindTexture(GL_TEXTURE_2D, tex->getTexID());
         // 设置纹理单元
         glUniform1i(shader.getUniformLocation((name + number).c_str()), i);
     }
 
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(_VAO);
+    glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
     
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);
 }
 
-void mesh::setupMesh()
+void Mesh::setupMesh()
 {
     // 创建VAO
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    glGenVertexArrays(1, &_VAO);
+    glBindVertexArray(_VAO);
 
     // 顶点缓冲
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
 
     // 索引缓冲
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    glGenBuffers(1, &_EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(unsigned int), &_indices[0], GL_STATIC_DRAW);
 
     // 设置顶点属性
     // 顶点坐标

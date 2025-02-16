@@ -1,22 +1,11 @@
 #include <common/window.h>
 
-class hello_triangle2 : public Window
-{
-private:
-    GLuint VAO, VBO, EBO;
-    GLuint shaderProgram;
-    virtual void onInit();
-    virtual void onUpdate();
-public:
-    hello_triangle2(const GLchar *name, GLuint width, GLuint height) : Window(name, width, height) {}
-    ~hello_triangle2();
-};
-
 class hello_triangle : public Window
 {
 private:
-    GLuint VAO, VBO;
-    GLuint shaderProgram;
+    GLuint _VAO, _VBO;
+    GLuint _programID;
+protected:
     virtual void onInit();
     virtual void onUpdate();
 public:
@@ -24,13 +13,26 @@ public:
     ~hello_triangle();
 };
 
+class hello_rectangle : public Window
+{
+private:
+    GLuint _VAO, _VBO, _EBO;
+    GLuint _programID;
+protected:
+    virtual void onInit();
+    virtual void onUpdate();
+public:
+    hello_rectangle(const GLchar *name, GLuint width, GLuint height) : Window(name, width, height) {}
+    ~hello_rectangle();
+};
+
 /**************************************************** hello_triangle ****************************************************/
 
 hello_triangle::~hello_triangle()
 {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
+    glDeleteVertexArrays(1, &_VAO);
+    glDeleteBuffers(1, &_VBO);
+    glDeleteProgram(_programID);
 }
 
 void hello_triangle::onInit()
@@ -42,12 +44,12 @@ void hello_triangle::onInit()
     };
     
     // 顶点数组对象
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    glGenVertexArrays(1, &_VAO);
+    glBindVertexArray(_VAO);
 
     // 顶点缓冲对象
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glGenBuffers(1, &_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // 链接顶点属性
@@ -87,16 +89,16 @@ void hello_triangle::onInit()
     glCompileShader(fragmentShader);
 
     // 着色器程序
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
+    _programID = glCreateProgram();
+    glAttachShader(_programID, vertexShader);
+    glAttachShader(_programID, fragmentShader);
+    glLinkProgram(_programID);
     // 检查链接错误
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    glGetProgramiv(_programID, GL_LINK_STATUS, &success);
     if (!success)
     {
         GLchar infoLog[512];
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        glGetProgramInfoLog(_programID, 512, NULL, infoLog);
         std::cout << "Link Shader Error" << std::endl;
         std::cout << infoLog << std::endl;
     }
@@ -107,22 +109,22 @@ void hello_triangle::onInit()
 
 void hello_triangle::onUpdate()
 {
-    glUseProgram(shaderProgram);
-    glBindVertexArray(VAO);
+    glUseProgram(_programID);
+    glBindVertexArray(_VAO);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-/**************************************************** hello_triangle2 ****************************************************/
+/**************************************************** hello_rectangle ****************************************************/
 
-hello_triangle2::~hello_triangle2()
+hello_rectangle::~hello_rectangle()
 {
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteProgram(shaderProgram);
+    glDeleteVertexArrays(1, &_VAO);
+    glDeleteBuffers(1, &_VBO);
+    glDeleteBuffers(1, &_EBO);
+    glDeleteProgram(_programID);
 }
 
-void hello_triangle2::onInit()
+void hello_rectangle::onInit()
 {
     // 顶点
     float vertices[] = {
@@ -138,17 +140,17 @@ void hello_triangle2::onInit()
     };
 
     // 顶点数组
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
+    glGenVertexArrays(1, &_VAO);
+    glBindVertexArray(_VAO);
 
     // 顶点缓冲
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glGenBuffers(1, &_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     // 元素缓冲
-    glGenBuffers(1, &EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glGenBuffers(1, &_EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // 设置顶点属性
@@ -188,16 +190,16 @@ void hello_triangle2::onInit()
     glCompileShader(fragmentShader);
 
     // 着色器程序
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
+    _programID = glCreateProgram();
+    glAttachShader(_programID, vertexShader);
+    glAttachShader(_programID, fragmentShader);
+    glLinkProgram(_programID);
     // 检查链接错误
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    glGetProgramiv(_programID, GL_LINK_STATUS, &success);
     if (!success)
     {
         GLchar infoLog[512];
-        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+        glGetProgramInfoLog(_programID, 512, NULL, infoLog);
         std::cout << "Link Shader Error" << std::endl;
         std::cout << infoLog << std::endl;
     }
@@ -206,12 +208,12 @@ void hello_triangle2::onInit()
     glDeleteShader(fragmentShader);
 }
 
-void hello_triangle2::onUpdate()
+void hello_rectangle::onUpdate()
 {
     // 使用线框模式绘制三角形正面与背面
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    glUseProgram(shaderProgram);
-    glBindVertexArray(VAO);
+    glUseProgram(_programID);
+    glBindVertexArray(_VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
@@ -219,8 +221,9 @@ void hello_triangle2::onUpdate()
 
 int main()
 {
-    // Window *window = new hello_triangle("2_hello_triangle", 800, 600);
-    Window *window = new hello_triangle2("2_hello_triangle2", 800, 600);
-    window->start();
+    Window *window1 = new hello_triangle("2_hello_triangle", 800, 600);
+    window1->start();
+    Window *window2 = new hello_rectangle("2_hello_rectangle", 800, 600);
+    window2->start();
     return 0;
 }

@@ -12,16 +12,21 @@ class Shader
 {
 private:
     GLuint _programID;
-    GLuint createShader(GLenum type, const GLchar *shaderPath);
+    GLuint createShader(GLenum type, std::string shaderPath);
+    static std::string shaderBasePath;
 public:
-    Shader(const GLchar *vertexPath, const GLchar *fragmentPath);
+    Shader(std::string vertexPath, std::string fragmentPath);
     ~Shader();
     GLvoid use();
     GLuint getProgramID() { return _programID; }
     GLint getUniformLocation(const GLchar *name) { return glGetUniformLocation(_programID, name); }
+    GLvoid setli(const GLchar *name, GLint value) { glUniform1i(getUniformLocation(name), value); }
+    GLvoid set4f(const GLchar *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w) { glUniform4f(getUniformLocation(name), x, y, z, w); }
 };
 
-Shader::Shader(const GLchar *vertexPath, const GLchar *fragmentPath)
+std::string Shader::shaderBasePath = "./../../../shader/";
+
+Shader::Shader(std::string vertexPath, std::string fragmentPath)
 {
     GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexPath);
     GLuint fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentPath);
@@ -55,7 +60,7 @@ GLvoid Shader::use()
     glUseProgram(_programID);
 }
 
-GLuint Shader::createShader(GLenum type, const GLchar *shaderPath)
+GLuint Shader::createShader(GLenum type, std::string shaderPath)
 {
     std::string code;
     std::ifstream shaderFile;
@@ -64,7 +69,7 @@ GLuint Shader::createShader(GLenum type, const GLchar *shaderPath)
     try
     {
         // 打开文件
-        shaderFile.open(shaderPath);
+        shaderFile.open(shaderBasePath + shaderPath);
         // 读取文件的缓冲内容到数据流中
         std::stringstream buffer;
         buffer << shaderFile.rdbuf();
