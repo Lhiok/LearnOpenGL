@@ -9,8 +9,8 @@ private:
     Shader *_shader;
     std::string _vertexPath, _fragmentPath;
 protected:
-    virtual void onInit();
-    virtual void onUpdate();
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
 public:
     shaders(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
     ~shaders();
@@ -23,8 +23,8 @@ private:
     Shader *_shader;
     std::string _vertexPath, _fragmentPath;
 protected:
-    virtual void onInit();
-    virtual void onUpdate();
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
 public:
     shaders2(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
     ~shaders2();
@@ -48,7 +48,7 @@ shaders::~shaders()
     _fragmentPath = nullptr;
 }
 
-void shaders::onInit()
+void shaders::onInit(GLFWwindow *window)
 {
     // 获取硬件支持最大的顶点属性上限 至少16个
     int nrAttributes;
@@ -78,7 +78,7 @@ void shaders::onInit()
     _shader = new Shader(_vertexPath, _fragmentPath);
 }
 
-void shaders::onUpdate()
+void shaders::onUpdate(GLFWwindow *window)
 {
     _shader->use();
     // 根据时间设置ourColor
@@ -108,7 +108,7 @@ shaders2::~shaders2()
     _fragmentPath = nullptr;
 }
 
-void shaders2::onInit()
+void shaders2::onInit(GLFWwindow *window)
 {
     // 获取硬件支持最大的顶点属性上限 至少16个
     int nrAttributes;
@@ -142,7 +142,7 @@ void shaders2::onInit()
     _shader = new Shader(_vertexPath, _fragmentPath);
 }
 
-void shaders2::onUpdate()
+void shaders2::onUpdate(GLFWwindow *window)
 {
     _shader->use();
     glBindVertexArray(_VAO);

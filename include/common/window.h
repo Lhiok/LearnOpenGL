@@ -17,8 +17,8 @@ private:
     static bool _gladInited;
     static void onWindowSizeChange(GLFWwindow* window, int width, int height);
 protected:
-    virtual void onInit() {}
-    virtual void onUpdate() {}
+    virtual void onInit(GLFWwindow *window) {}
+    virtual void onUpdate(GLFWwindow *window) {}
     virtual void processInput(GLFWwindow *window);
 public:
     Window(const GLchar *name, GLuint width, GLuint height);
@@ -92,20 +92,24 @@ void Window::start()
     glfwSetFramebufferSizeCallback(_window, onWindowSizeChange);
     std::cout << "Window context set: " << _name << std::endl;
 
+    // 开启深度测试
+    glEnable(GL_DEPTH_TEST);
+
     // 初始化
-    onInit();
+    onInit(_window);
     std::cout << "Window init: " << _name << std::endl;
+
     // 渲染循环
     while (!glfwWindowShouldClose(_window))
     {
         // 设置清空屏幕所用的颜色
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        // 清空颜色缓冲
-        glClear(GL_COLOR_BUFFER_BIT);
+        // 清空颜色缓冲、深度缓冲
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // 处理输入
         processInput(_window);
         // 渲染
-        onUpdate();
+        onUpdate(_window);
         // 检查并调用事件
         glfwPollEvents();
         // 交换缓冲

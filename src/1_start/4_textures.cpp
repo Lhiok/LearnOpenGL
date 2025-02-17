@@ -1,6 +1,7 @@
 #include <common/window.h>
 #include <common/shader.h>
 #include <common/texture.h>
+#include <common/global.h>
 
 class textures : public Window
 {
@@ -10,8 +11,8 @@ private:
     Texture *_texture0;
     std::string _vertexPath, _fragmentPath;
 protected:
-    virtual void onInit();
-    virtual void onUpdate();
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
 public:
     textures(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
     ~textures();
@@ -25,8 +26,8 @@ private:
     Texture *_texture0, *_texture1;
     std::string _vertexPath, _fragmentPath;
 protected:
-    virtual void onInit();
-    virtual void onUpdate();
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
 public:
     textures2(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
     ~textures2();
@@ -48,24 +49,13 @@ textures::~textures()
     delete _shader;
     delete _texture0;
     _shader = nullptr;
+    _texture0 = nullptr;
     _vertexPath = nullptr;
     _fragmentPath = nullptr;
 }
 
-void textures::onInit()
+void textures::onInit(GLFWwindow *window)
 {
-    float vertices[] = {
-        // 位置               // 颜色              // 纹理
-        +0.5f, +0.5f, +0.0f, +1.0f, +0.0f, +0.0f, 1.0f, 1.0f, // 右上
-        +0.5f, -0.5f, +0.0f, +0.0f, +1.0f, +0.0f, 1.0f, 0.0f, // 右下
-        -0.5f, -0.5f, +0.0f, +0.0f, +0.0f, +1.0f, 0.0f, 0.0f, // 左下
-        -0.5f, +0.5f, +0.0f, +1.0f, +1.0f, +0.0f, 0.0f, 1.0f  // 左上
-    };
-    unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
-    };
-    
     // 顶点数组对象
     glGenVertexArrays(1, &_VAO);
     glBindVertexArray(_VAO);
@@ -73,12 +63,12 @@ void textures::onInit()
     // 顶点缓冲对象
     glGenBuffers(1, &_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(square_vertices), square_vertices, GL_STATIC_DRAW);
 
     // 索引缓冲对象
     glGenBuffers(1, &_EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);
 
     // 链接顶点属性-位置
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -95,7 +85,7 @@ void textures::onInit()
     _texture0 = new Texture("ourTexture", "container.jpg", GL_RGB);
 }
 
-void textures::onUpdate()
+void textures::onUpdate(GLFWwindow *window)
 {
     _shader->use();
 
@@ -123,24 +113,14 @@ textures2::~textures2()
     delete _texture0;
     delete _texture1;
     _shader = nullptr;
+    _texture0 = nullptr;
+    _texture1 = nullptr;
     _vertexPath = nullptr;
     _fragmentPath = nullptr;
 }
 
-void textures2::onInit()
+void textures2::onInit(GLFWwindow *window)
 {
-    float vertices[] = {
-        // 位置               // 颜色              // 纹理
-        +0.5f, +0.5f, +0.0f, +1.0f, +0.0f, +0.0f, 1.0f, 1.0f, // 右上
-        +0.5f, -0.5f, +0.0f, +0.0f, +1.0f, +0.0f, 1.0f, 0.0f, // 右下
-        -0.5f, -0.5f, +0.0f, +0.0f, +0.0f, +1.0f, 0.0f, 0.0f, // 左下
-        -0.5f, +0.5f, +0.0f, +1.0f, +1.0f, +0.0f, 0.0f, 1.0f  // 左上
-    };
-    unsigned int indices[] = {
-        0, 1, 3,
-        1, 2, 3
-    };
-    
     // 顶点数组对象
     glGenVertexArrays(1, &_VAO);
     glBindVertexArray(_VAO);
@@ -148,12 +128,12 @@ void textures2::onInit()
     // 顶点缓冲对象
     glGenBuffers(1, &_VBO);
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(square_vertices), square_vertices, GL_STATIC_DRAW);
 
     // 索引缓冲对象
     glGenBuffers(1, &_EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(square_indices), square_indices, GL_STATIC_DRAW);
 
     // 链接顶点属性-位置
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -171,7 +151,7 @@ void textures2::onInit()
     _texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
 }
 
-void textures2::onUpdate()
+void textures2::onUpdate(GLFWwindow *window)
 {
     _shader->use();
 

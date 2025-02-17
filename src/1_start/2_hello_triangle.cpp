@@ -6,8 +6,8 @@ private:
     GLuint _VAO, _VBO;
     GLuint _programID;
 protected:
-    virtual void onInit();
-    virtual void onUpdate();
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
 public:
     hello_triangle(const GLchar *name, GLuint width, GLuint height) : Window(name, width, height) {}
     ~hello_triangle();
@@ -19,8 +19,8 @@ private:
     GLuint _VAO, _VBO, _EBO;
     GLuint _programID;
 protected:
-    virtual void onInit();
-    virtual void onUpdate();
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
 public:
     hello_rectangle(const GLchar *name, GLuint width, GLuint height) : Window(name, width, height) {}
     ~hello_rectangle();
@@ -35,7 +35,7 @@ hello_triangle::~hello_triangle()
     glDeleteProgram(_programID);
 }
 
-void hello_triangle::onInit()
+void hello_triangle::onInit(GLFWwindow *window)
 {
     float vertices[] = {
         -0.5f, -0.5f, +0.0f,
@@ -107,7 +107,7 @@ void hello_triangle::onInit()
     glDeleteShader(fragmentShader);
 }
 
-void hello_triangle::onUpdate()
+void hello_triangle::onUpdate(GLFWwindow *window)
 {
     glUseProgram(_programID);
     glBindVertexArray(_VAO);
@@ -124,7 +124,7 @@ hello_rectangle::~hello_rectangle()
     glDeleteProgram(_programID);
 }
 
-void hello_rectangle::onInit()
+void hello_rectangle::onInit(GLFWwindow *window)
 {
     // 顶点
     float vertices[] = {
@@ -208,7 +208,7 @@ void hello_rectangle::onInit()
     glDeleteShader(fragmentShader);
 }
 
-void hello_rectangle::onUpdate()
+void hello_rectangle::onUpdate(GLFWwindow *window)
 {
     // 使用线框模式绘制三角形正面与背面
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
