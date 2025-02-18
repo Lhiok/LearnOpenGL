@@ -1,4 +1,3 @@
-#include <math.h>
 #include <common/window.h>
 #include <common/shader.h>
 

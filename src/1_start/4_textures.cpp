@@ -1,7 +1,8 @@
 #include <common/window.h>
 #include <common/shader.h>
 #include <common/texture.h>
-#include <common/global.h>
+
+#include "global.cpp"
 
 class textures : public Window
 {

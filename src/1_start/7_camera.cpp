@@ -1,10 +1,9 @@
-#include <common/window.h>
-#include <common/shader.h>
-#include <common/texture.h>
 #include <common/global.h>
+#include <common/window.h>
+#include <common/mesh.h>
+#include <common/shader.h>
 
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "global.cpp"
 
 class camera : public Window
 {
@@ -20,6 +19,23 @@ protected:
 public:
     camera(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
     ~camera();
+};
+
+class camera_move : public Window
+{
+private:
+    GLuint _VAO, _VBO, _EBO;
+    glm::mat4 _model;
+    Camera *_camera;
+    Mesh *_mesh;
+    Shader *_shader;
+    std::string _vertexPath, _fragmentPath;
+protected:
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
+public:
+    camera_move(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
+    ~camera_move();
 };
 
 /**************************************************** camera ****************************************************/
@@ -110,18 +126,6 @@ void camera::onUpdate(GLFWwindow *window)
 
     glBindVertexArray(_VAO);
 
-    glm::vec3 cubePositions[] = {
-        glm::vec3(+0.0f, +0.0f, +0.0f), 
-        glm::vec3(+2.0f, +5.0f, -15.f), 
-        glm::vec3(-1.5f, -2.2f, -2.5f),  
-        glm::vec3(-3.8f, -2.0f, -12.f),  
-        glm::vec3(+2.4f, -0.4f, -3.5f),  
-        glm::vec3(-1.7f, +3.0f, -7.5f),  
-        glm::vec3(+1.3f, -2.0f, -2.5f),  
-        glm::vec3(+1.5f, +2.0f, -2.5f), 
-        glm::vec3(+1.5f, +0.2f, -1.5f), 
-        glm::vec3(-1.3f, +1.0f, -1.5f),  
-    };
     for (unsigned int index = 0, len = sizeof(cubePositions) / sizeof(cubePositions[0]); index < len; index++)
     {
         // 模型矩阵
@@ -134,11 +138,77 @@ void camera::onUpdate(GLFWwindow *window)
     }
 }
 
+/**************************************************** camera_move ****************************************************/
+
+camera_move::camera_move(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath) : Window(name, width, height)
+{
+    _vertexPath = vertexPath;
+    _fragmentPath = fragmentPath;
+}
+
+camera_move::~camera_move()
+{
+    glDeleteVertexArrays(1, &_VAO);
+    glDeleteBuffers(1, &_VBO);
+    glDeleteBuffers(1, &_EBO);
+    delete _camera;
+    delete _mesh;
+    delete _shader;
+    _camera = nullptr;
+    _mesh = nullptr;
+    _shader = nullptr;
+    _vertexPath = nullptr;
+    _fragmentPath = nullptr;
+}
+
+void camera_move::onInit(GLFWwindow *window)
+{
+    // Camera
+    _camera = new Camera(window);
+    // Mesh
+    Texture *texture0 = new Texture("texture0", "container.jpg", GL_RGB);
+    Texture *texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    std::vector<Texture*> cube_texture_vector = {
+        texture0,
+        texture1,
+    };
+    _mesh = new Mesh(cube_vertices_vector, cube_indices_vector, cube_texture_vector);
+    // Shader
+    _shader = new Shader(_vertexPath, _fragmentPath);
+}
+
+void camera_move::onUpdate(GLFWwindow *window)
+{
+    _shader->use();
+
+    // 视图矩阵
+    glm::mat4 view = _camera->view();
+    _shader->setmat4fv("view", glm::value_ptr(view));
+    // _shader->setmat4fv("view", glm::value_ptr(_camera->view()));
+    // 投射投影矩阵
+    glm::mat4 projection = _camera->projection();
+    _shader->setmat4fv("projection", glm::value_ptr(projection));
+    // _shader->setmat4fv("projection", glm::value_ptr(_camera->projection()));
+
+    for (unsigned int index = 0, len = sizeof(cubePositions) / sizeof(cubePositions[0]); index < len; index++)
+    {
+        // 模型矩阵
+        _model = glm::mat4(1.0f);
+        _model = glm::translate(_model, cubePositions[index]);
+        _model = glm::rotate(_model, glm::radians(20.0f * index), glm::vec3(1.0f, 0.3f, 0.5f));
+        _shader->setmat4fv("model", glm::value_ptr(_model));
+
+        _mesh->draw(_shader);
+    }
+}
+
 /**************************************************** test ****************************************************/
 
 int main()
 {
     Window *window1 = new camera("7_camera", 800, 600, "1_start/coordinateSystems.vs", "1_start/textureMixTexture.fs");
     window1->start();
+    Window *window2 = new camera_move("7_camera_move", 800, 600, "1_start/coordinateSystems.vs", "1_start/textureMixTexture.fs");
+    window2->start();
     return 0;
 }

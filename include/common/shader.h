@@ -21,6 +21,7 @@ public:
     GLuint getProgramID() { return _programID; }
     GLint getUniformLocation(const GLchar *name) { return glGetUniformLocation(_programID, name); }
     GLvoid setli(const GLchar *name, GLint value) { glUniform1i(getUniformLocation(name), value); }
+    GLvoid set3f(const GLchar *name, GLfloat x, GLfloat y, GLfloat z) { glUniform3f(getUniformLocation(name), x, y, z); }
     GLvoid set4f(const GLchar *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w) { glUniform4f(getUniformLocation(name), x, y, z, w); }
     GLvoid setmat4fv(const GLchar *name, GLfloat *value) { glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value); }
 };

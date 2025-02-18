@@ -1,8 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include "camera.h"
 
 #include <iostream>
 
@@ -13,6 +12,7 @@ private:
     GLuint _width;
     GLuint _height;
     GLFWwindow *_window;
+    float _lastFrameTime, _deltaTime;
     static bool _glfwInited;
     static bool _gladInited;
     static void onWindowSizeChange(GLFWwindow* window, int width, int height);
@@ -99,17 +99,25 @@ void Window::start()
     onInit(_window);
     std::cout << "Window init: " << _name << std::endl;
 
+    _lastFrameTime = glfwGetTime();
+
     // 渲染循环
     while (!glfwWindowShouldClose(_window))
     {
+        float currentFrameTime = glfwGetTime();
+        _deltaTime = currentFrameTime - _lastFrameTime;
+        _lastFrameTime = currentFrameTime;
+
         // 设置清空屏幕所用的颜色
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         // 清空颜色缓冲、深度缓冲
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         // 处理输入
         processInput(_window);
         // 渲染
         onUpdate(_window);
+
         // 检查并调用事件
         glfwPollEvents();
         // 交换缓冲
@@ -119,6 +127,8 @@ void Window::start()
 
 void Window::processInput(GLFWwindow *window)
 {
+    Camera::onKeyInput(window, _deltaTime);
+
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, true);
