@@ -19,3 +19,4 @@ include_directories(./include)
 
 # 添加子目录
 add_subdirectory(src/1_start)
+add_subdirectory(src/2_lighting)

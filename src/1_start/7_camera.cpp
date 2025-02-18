@@ -24,7 +24,6 @@ public:
 class camera_move : public Window
 {
 private:
-    GLuint _VAO, _VBO, _EBO;
     glm::mat4 _model;
     Camera *_camera;
     Mesh *_mesh;
@@ -148,9 +147,6 @@ camera_move::camera_move(const GLchar *name, GLuint width, GLuint height, std::s
 
 camera_move::~camera_move()
 {
-    glDeleteVertexArrays(1, &_VAO);
-    glDeleteBuffers(1, &_VBO);
-    glDeleteBuffers(1, &_EBO);
     delete _camera;
     delete _mesh;
     delete _shader;
@@ -166,11 +162,11 @@ void camera_move::onInit(GLFWwindow *window)
     // Camera
     _camera = new Camera(window);
     // Mesh
-    Texture *texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    Texture *texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    Texture *cube_texture0 = new Texture("texture0", "container.jpg", GL_RGB);
+    Texture *cube_texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
     std::vector<Texture*> cube_texture_vector = {
-        texture0,
-        texture1,
+        cube_texture0,
+        cube_texture1,
     };
     _mesh = new Mesh(cube_vertices_vector, cube_indices_vector, cube_texture_vector);
     // Shader
@@ -182,13 +178,9 @@ void camera_move::onUpdate(GLFWwindow *window)
     _shader->use();
 
     // 视图矩阵
-    glm::mat4 view = _camera->view();
-    _shader->setmat4fv("view", glm::value_ptr(view));
-    // _shader->setmat4fv("view", glm::value_ptr(_camera->view()));
+    _shader->setmat4fv("view", glm::value_ptr(_camera->view()));
     // 投射投影矩阵
-    glm::mat4 projection = _camera->projection();
-    _shader->setmat4fv("projection", glm::value_ptr(projection));
-    // _shader->setmat4fv("projection", glm::value_ptr(_camera->projection()));
+    _shader->setmat4fv("projection", glm::value_ptr(_camera->projection()));
 
     for (unsigned int index = 0, len = sizeof(cubePositions) / sizeof(cubePositions[0]); index < len; index++)
     {
