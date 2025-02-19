@@ -35,6 +35,7 @@ private:
 public:
     Camera(GLFWwindow *window);
     ~Camera();
+    glm::vec3 position() { return _position; }
     glm::vec3 front();
     glm::mat4 view();
     glm::mat4 projection();

@@ -18,7 +18,7 @@ public:
     ~colors();
 };
 
-/**************************************************** camera_move ****************************************************/
+/**************************************************** colors ****************************************************/
 
 colors::~colors()
 {
@@ -71,6 +71,7 @@ void colors::onUpdate(GLFWwindow *window)
     _meshCube->draw(_shaderCube);
 
     _shaderLight->use();
+    _shaderLight->set3f("color", 1.0f, 1.0f, 1.0f);
     _shaderLight->setmat4fv("model", glm::value_ptr(_modelLight));
     _shaderLight->setmat4fv("view", glm::value_ptr(_camera->view()));
     _shaderLight->setmat4fv("projection", glm::value_ptr(_camera->projection()));

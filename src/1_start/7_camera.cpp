@@ -117,19 +117,19 @@ void camera::onUpdate(GLFWwindow *window)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _texture0->getTexID());
     // 设置uniform变量
-    _shader->setli("texture0", 0);
+    _shader->set1i("texture0", 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, _texture1->getTexID());
-    _shader->setli("texture1", 1);
+    _shader->set1i("texture1", 1);
 
     glBindVertexArray(_VAO);
 
-    for (unsigned int index = 0, len = sizeof(cubePositions) / sizeof(cubePositions[0]); index < len; index++)
+    for (unsigned int index = 0, len = sizeof(cube_positions) / sizeof(cube_positions[0]); index < len; index++)
     {
         // 模型矩阵
         _model = glm::mat4(1.0f);
-        _model = glm::translate(_model, cubePositions[index]);
+        _model = glm::translate(_model, cube_positions[index]);
         _model = glm::rotate(_model, glm::radians(20.0f * index), glm::vec3(1.0f, 0.3f, 0.5f));
         _shader->setmat4fv("model", glm::value_ptr(_model));
 
@@ -182,11 +182,11 @@ void camera_move::onUpdate(GLFWwindow *window)
     // 投射投影矩阵
     _shader->setmat4fv("projection", glm::value_ptr(_camera->projection()));
 
-    for (unsigned int index = 0, len = sizeof(cubePositions) / sizeof(cubePositions[0]); index < len; index++)
+    for (unsigned int index = 0, len = sizeof(cube_positions) / sizeof(cube_positions[0]); index < len; index++)
     {
         // 模型矩阵
         _model = glm::mat4(1.0f);
-        _model = glm::translate(_model, cubePositions[index]);
+        _model = glm::translate(_model, cube_positions[index]);
         _model = glm::rotate(_model, glm::radians(20.0f * index), glm::vec3(1.0f, 0.3f, 0.5f));
         _shader->setmat4fv("model", glm::value_ptr(_model));
 

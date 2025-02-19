@@ -68,7 +68,7 @@ void Mesh::draw(Shader *shader)
         // 绑定纹理
         glBindTexture(GL_TEXTURE_2D, tex->getTexID());
         // 设置纹理单元
-        glUniform1i(shader->getUniformLocation((name + number).c_str()), index);
+        shader->set1i((name + number).c_str(), index);
     }
 
     glBindVertexArray(_VAO);

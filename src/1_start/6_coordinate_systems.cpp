@@ -122,11 +122,11 @@ void coordinate_systems_square::onUpdate(GLFWwindow *window)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _texture0->getTexID());
     // 设置uniform变量
-    _shader->setli("texture0", 0);
+    _shader->set1i("texture0", 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, _texture1->getTexID());
-    _shader->setli("texture1", 1);
+    _shader->set1i("texture1", 1);
 
     glBindVertexArray(_VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -207,11 +207,11 @@ void coordinate_systems_cube::onUpdate(GLFWwindow *window)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _texture0->getTexID());
     // 设置uniform变量
-    _shader->setli("texture0", 0);
+    _shader->set1i("texture0", 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, _texture1->getTexID());
-    _shader->setli("texture1", 1);
+    _shader->set1i("texture1", 1);
 
     glBindVertexArray(_VAO);
 

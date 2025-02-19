@@ -79,11 +79,11 @@ void transformations::onUpdate(GLFWwindow *window)
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, _texture0->getTexID());
     // 设置uniform变量
-    _shader->setli("texture0", 0);
+    _shader->set1i("texture0", 0);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, _texture1->getTexID());
-    _shader->setli("texture1", 1);
+    _shader->set1i("texture1", 1);
 
     glm::mat4 trans = glm::mat4(1.0f);
     trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
