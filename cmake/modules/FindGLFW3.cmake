@@ -15,14 +15,10 @@
 # Cmake file from: https://github.com/daw42/glslcookbook
 
 set( _glfw3_HEADER_SEARCH_DIRS
-"/usr/include"
-"/usr/local/include"
 "${CMAKE_SOURCE_DIR}/includes"
 "C:/Program Files (x86)/glfw/include" 
 "C:/Program Files (x86)/GLFW/include")
 set( _glfw3_LIB_SEARCH_DIRS
-"/usr/lib"
-"/usr/local/lib"
 "${CMAKE_SOURCE_DIR}/lib"
 "C:/Program Files (x86)/glfw/lib-msvc110"
 "C:/Program Files (x86)/GLFW/lib")
@@ -53,7 +49,7 @@ GLFW3_LIBRARY GLFW3_INCLUDE_DIR)
 
 IF(GLFW3_FOUND)
 	IF(NOT GLFW3_FIND_QUIETLY)
-	MESSAGE(STATUS "Found ASSIMP: ${GLFW3_LIBRARY}")
+	MESSAGE(STATUS "Found GLFW3: ${GLFW3_LIBRARY}")
 	ENDIF(NOT GLFW3_FIND_QUIETLY)
 ELSE(GLFW3_FOUND)
 	IF(GLFW3_FIND_REQUIRED)

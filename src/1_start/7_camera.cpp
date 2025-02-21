@@ -51,13 +51,11 @@ camera::~camera()
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_EBO);
     delete _shader;
-    delete _texture0;
-    delete _texture1;
+    Texture::Destroy(_texture0);
+    Texture::Destroy(_texture1);
     _shader = nullptr;
     _texture0 = nullptr;
     _texture1 = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void camera::onInit(GLFWwindow *window)
@@ -85,8 +83,8 @@ void camera::onInit(GLFWwindow *window)
 
     // 着色器程序
     _shader = new Shader(_vertexPath, _fragmentPath);
-    _texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    _texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    _texture0 = Texture::Load("texture0", "container.jpg");
+    _texture1 = Texture::Load("texture1", "awesomeface.png");
 }
 
 void camera::onUpdate(GLFWwindow *window)
@@ -153,8 +151,6 @@ camera_move::~camera_move()
     _camera = nullptr;
     _mesh = nullptr;
     _shader = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void camera_move::onInit(GLFWwindow *window)
@@ -162,8 +158,8 @@ void camera_move::onInit(GLFWwindow *window)
     // Camera
     _camera = new Camera(window);
     // Mesh
-    Texture *cube_texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    Texture *cube_texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    Texture *cube_texture0 = Texture::Load("texture0", "container.jpg");
+    Texture *cube_texture1 = Texture::Load("texture1", "awesomeface.png");
     std::vector<Texture*> cube_texture_vector = {
         cube_texture0,
         cube_texture1,
@@ -200,7 +196,11 @@ int main()
 {
     Window *window1 = new camera("7_camera", 800, 600, "1_start/coordinateSystems.vs", "1_start/textureMixTexture.fs");
     window1->start();
+    delete window1;
+
     Window *window2 = new camera_move("7_camera_move", 800, 600, "1_start/coordinateSystems.vs", "1_start/textureMixTexture.fs");
     window2->start();
+    delete window2;
+
     return 0;
 }

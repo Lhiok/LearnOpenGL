@@ -25,7 +25,7 @@ colors::~colors()
     delete _camera;
     delete _meshCube;
     delete _meshLight;
-    delete _shaderCube;
+    delete _shaderCube; 
     delete _shaderLight;
     _camera = nullptr;
     _meshCube = nullptr;
@@ -39,8 +39,8 @@ void colors::onInit(GLFWwindow *window)
     // Camera
     _camera = new Camera(window);
     
-    Texture *cube_texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    Texture *cube_texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    Texture *cube_texture0 = Texture::Load("texture0", "container.jpg");
+    Texture *cube_texture1 = Texture::Load("texture1", "awesomeface.png");
     std::vector<Texture*> cube_texture_vector = {
         cube_texture0,
         cube_texture1,
@@ -84,5 +84,7 @@ int main()
 {
     Window *window1 = new colors("1_colors", 800, 600);
     window1->start();
+    delete window1;
+
     return 0;
 }

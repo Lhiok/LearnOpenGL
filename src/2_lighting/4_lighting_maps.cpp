@@ -40,8 +40,6 @@ lighting_maps::~lighting_maps()
     _meshLight = nullptr;
     _shaderCube = nullptr;
     _shaderLight = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void lighting_maps::onInit(GLFWwindow *window)
@@ -50,8 +48,8 @@ void lighting_maps::onInit(GLFWwindow *window)
     _camera = new Camera(window);
     Camera::SetMainCamera(_camera);
     
-    Texture *texture_diffuse = new Texture("texture_diffuse", "container2.png", GL_RGBA);
-    Texture *texture_specular = new Texture("texture_specular", "container2_specular.png", GL_RGBA);
+    Texture *texture_diffuse = Texture::Load("texture_diffuse", "container2.png");
+    Texture *texture_specular = Texture::Load("texture_specular", "container2_specular.png");
     std::vector<Texture*> cube_texture_vector = {
         texture_diffuse,
         texture_specular,
@@ -117,5 +115,7 @@ int main()
 {
     Window *window1 = new lighting_maps("4_lighting_maps", 800, 600, "2_lighting/2_basic_lighting.vs", "2_lighting/4_lighting_maps.fs");
     window1->start();
+    delete window1;
+
     return 0;
 }

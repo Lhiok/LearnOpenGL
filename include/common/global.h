@@ -2,6 +2,7 @@
 #define GLOBAL_H
 
 #include "vertex.h"
+#include "light.h"
 
 #include <vector>
 
@@ -167,5 +168,78 @@ glm::vec3 cube_positions[] = {
     glm::vec3(+1.5f, +0.2f, -1.5f), 
     glm::vec3(-1.3f, +1.0f, -1.5f),  
 };
+
+DirectionalLight *light_directional = new DirectionalLight(
+    glm::vec3(-0.2f, -1.0f, -0.3f),
+    glm::vec3(0.2f, 0.2f, 0.2f),
+    glm::vec3(0.3f, 0.3f, 0.3f),
+    glm::vec3(1.0f, 1.0f, 1.0f)
+);
+
+DirectionalLight *light_directional_weak = new DirectionalLight(
+    glm::vec3(-0.2f, -1.0f, -0.3f),
+    glm::vec3(0.05f, 0.05f, 0.05f),
+    glm::vec3(0.2f, 0.2f, 0.2f),
+    glm::vec3(1.0f, 1.0f, 1.0f)
+);
+
+PointLight *light_point = new PointLight(
+    glm::vec3(1.2f, 1.0f, 2.0f),
+    1.0f,
+    0.09f,
+    0.032f,
+    glm::vec3(0.2f, 0.2f, 0.2f),
+    glm::vec3(0.3f, 0.3f, 0.3f),
+    glm::vec3(1.0f, 1.0f, 1.0f)
+);
+
+std::vector<PointLight*> light_point_vector = {
+    new PointLight(
+        glm::vec3(0.7f, 0.2f, 2.0f),
+        1.0f,
+        0.09f,
+        0.032f,
+        glm::vec3(0.05f, 0.05f, 0.05f),
+        glm::vec3(0.2f, 0.2f, 0.2f),
+        glm::vec3(1.0f, 1.0f, 1.0f)
+    ),
+    new PointLight(
+        glm::vec3(2.3f, -3.3f, -4.0f),
+        1.0f,
+        0.09f,
+        0.032f,
+        glm::vec3(0.05f, 0.0f, 0.0f),
+        glm::vec3(0.8f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f)
+    ),
+    new PointLight(
+        glm::vec3(-4.0f, 2.0f, -12.0f),
+        1.0f,
+        0.09f,
+        0.032f,
+        glm::vec3(0.0f, 0.05f, 0.0f),
+        glm::vec3(0.0f, 0.8f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f)
+    ),
+    new PointLight(
+        glm::vec3(0.0f, 0.0f, -3.0f),
+        1.0f,
+        0.09f,
+        0.032f,
+        glm::vec3(0.0f, 0.0f, 0.05f),
+        glm::vec3(0.0f, 0.0f, 0.8f),
+        glm::vec3(0.0f, 0.0f, 1.0f)
+    )
+};
+
+SpotLight *light_spot = new SpotLight(
+    glm::vec3(1.2f, 1.0f, 2.0f),
+    glm::vec3(0.0f, 0.0f, -1.0f),
+    glm::cos(glm::radians(12.5f)),
+    glm::cos(glm::radians(15.0f)),
+    glm::vec3(0.05f, 0.05f, 0.05f),
+    glm::vec3(0.8f, 0.8f, 0.8f),
+    glm::vec3(1.0f, 1.0f, 1.0f)
+);
 
 #endif

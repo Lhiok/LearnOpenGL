@@ -33,13 +33,11 @@ transformations::~transformations()
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_EBO);
     delete _shader;
-    delete _texture0;
-    delete _texture1;
+    Texture::Destroy(_texture0);
+    Texture::Destroy(_texture1);
     _shader = nullptr;
     _texture0 = nullptr;
     _texture1 = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void transformations::onInit(GLFWwindow *window)
@@ -67,8 +65,8 @@ void transformations::onInit(GLFWwindow *window)
 
     // 着色器程序
     _shader = new Shader(_vertexPath, _fragmentPath);
-    _texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    _texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    _texture0 = Texture::Load("texture0", "container.jpg");
+    _texture1 = Texture::Load("texture1", "awesomeface.png");
 }
 
 void transformations::onUpdate(GLFWwindow *window)
@@ -101,5 +99,7 @@ int main()
 {
     Window *window1 = new transformations("5_transformations", 800, 600, "1_start/transformations.vs", "1_start/textureMixTexture.fs");
     window1->start();
+    delete window1;
+
     return 0;
 }

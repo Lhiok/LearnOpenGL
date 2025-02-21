@@ -22,7 +22,7 @@ protected:
     virtual void processInput(GLFWwindow *window);
 public:
     Window(const GLchar *name, GLuint width, GLuint height);
-    ~Window();
+    virtual ~Window();
     void start();
 };
 
@@ -110,8 +110,8 @@ void Window::start()
 
         // 设置清空屏幕所用的颜色
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        // 清空颜色缓冲、深度缓冲
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // 清空颜色缓冲、深度缓冲、模板缓冲
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
         // 处理输入
         processInput(_window);

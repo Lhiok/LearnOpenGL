@@ -26,11 +26,11 @@ public:
 
     virtual glm::vec3 GetPosition() = 0;
 
-    virtual void draw(Shader *shader)
+    virtual void draw(Shader *shader, std::string name = "light")
     {
-        shader->set3f("light.ambient", ambient.x, ambient.y, ambient.z);
-        shader->set3f("light.diffuse", diffuse.x, diffuse.y, diffuse.z);
-        shader->set3f("light.specular", specular.x, specular.y, specular.z);
+        shader->set3f((name + ".ambient").c_str(), ambient.x, ambient.y, ambient.z);
+        shader->set3f((name + ".diffuse").c_str(), diffuse.x, diffuse.y, diffuse.z);
+        shader->set3f((name + ".specular").c_str(), specular.x, specular.y, specular.z);
     }
 };
 
@@ -57,10 +57,10 @@ public:
         return glm::vec3(100.0f, 100.0f, 100.0f);
     }
 
-    virtual void draw(Shader *shader)
+    virtual void draw(Shader *shader, std::string name = "light")
     {
-        Light::draw(shader);
-        shader->set3f("light.direction", direction.x, direction.y, direction.z);
+        Light::draw(shader, name);
+        shader->set3f((name + ".direction").c_str(), direction.x, direction.y, direction.z);
     }
 };
 
@@ -93,13 +93,13 @@ public:
         return position;
     }
 
-    virtual void draw(Shader *shader)
+    virtual void draw(Shader *shader, std::string name = "light")
     {
-        Light::draw(shader);
-        shader->set3f("light.position", position.x, position.y, position.z);
-        shader->set1f("light.constant", constant);
-        shader->set1f("light.linear", linear);
-        shader->set1f("light.quadratic", quadratic);
+        Light::draw(shader, name);
+        shader->set3f((name + ".position").c_str(), position.x, position.y, position.z);
+        shader->set1f((name + ".constant").c_str(), constant);
+        shader->set1f((name + ".linear").c_str(), linear);
+        shader->set1f((name + ".quadratic").c_str(), quadratic);
     }
 };
 
@@ -132,13 +132,13 @@ public:
         return position;
     }
 
-    virtual void draw(Shader *shader)
+    virtual void draw(Shader *shader, std::string name = "light")
     {
-        Light::draw(shader);
-        shader->set3f("light.position", position.x, position.y, position.z);
-        shader->set3f("light.direction", direction.x, direction.y, direction.z);
-        shader->set1f("light.cutOff", cutOff);
-        shader->set1f("light.outerCutOff", outerCutOff);
+        Light::draw(shader, name);
+        shader->set3f((name + ".position").c_str(), position.x, position.y, position.z);
+        shader->set3f((name + ".direction").c_str(), direction.x, direction.y, direction.z);
+        shader->set1f((name + ".cutOff").c_str(), cutOff);
+        shader->set1f((name + ".outerCutOff").c_str(), outerCutOff);
     }
 };
 

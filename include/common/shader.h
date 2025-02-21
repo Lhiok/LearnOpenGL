@@ -13,7 +13,7 @@ class Shader
 private:
     GLuint _programID;
     GLuint createShader(GLenum type, std::string shaderPath);
-    static std::string shaderBasePath;
+    static std::string _SHADER_BASE_PATH;
 public:
     Shader(std::string vertexPath, std::string fragmentPath);
     ~Shader();
@@ -29,7 +29,7 @@ public:
     GLvoid setmat4fv(const GLchar *name, const GLfloat *value) { glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value); }
 };
 
-std::string Shader::shaderBasePath = "./../../../shader/";
+std::string Shader::_SHADER_BASE_PATH = "./../../../shader/";
 
 Shader::Shader(std::string vertexPath, std::string fragmentPath)
 {
@@ -74,7 +74,7 @@ GLuint Shader::createShader(GLenum type, std::string shaderPath)
     try
     {
         // 打开文件
-        shaderFile.open(shaderBasePath + shaderPath);
+        shaderFile.open(_SHADER_BASE_PATH + shaderPath);
         // 读取文件的缓冲内容到数据流中
         std::stringstream buffer;
         buffer << shaderFile.rdbuf();

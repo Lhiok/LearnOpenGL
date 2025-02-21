@@ -4,8 +4,6 @@
 #include <common/shader.h>
 #include <common/light.h>
 
-#include "global.cpp"
-
 class light_casters : public Window
 {
 private:
@@ -42,8 +40,6 @@ light_casters::~light_casters()
     _meshLight = nullptr;
     _shaderCube = nullptr;
     _shaderLight = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void light_casters::onInit(GLFWwindow *window)
@@ -52,8 +48,8 @@ void light_casters::onInit(GLFWwindow *window)
     _camera = new Camera(window);
     Camera::SetMainCamera(_camera);
     
-    Texture *texture_diffuse = new Texture("texture_diffuse", "container2.png", GL_RGBA);
-    Texture *texture_specular = new Texture("texture_specular", "container2_specular.png", GL_RGBA);
+    Texture *texture_diffuse = Texture::Load("texture_diffuse", "container2.png");
+    Texture *texture_specular = Texture::Load("texture_specular", "container2_specular.png");
     std::vector<Texture*> cube_texture_vector = {
         texture_diffuse,
         texture_specular,
@@ -124,9 +120,15 @@ int main()
 {
     Window *window1 = new light_casters("5_light_casters_directional", 800, 600, light_directional, "2_lighting/2_basic_lighting.vs", "2_lighting/5_light_casters_directional.fs");
     window1->start();
+    delete window1;
+
     Window *window2 = new light_casters("5_light_casters_point", 800, 600, light_point, "2_lighting/2_basic_lighting.vs", "2_lighting/5_light_casters_point.fs");
     window2->start();
+    delete window2;
+
     Window *window3 = new light_casters("5_light_casters_spot", 800, 600, light_spot, "2_lighting/2_basic_lighting.vs", "2_lighting/5_light_casters_spot.fs");
     window3->start();
+    delete window3;
+
     return 0;
 }

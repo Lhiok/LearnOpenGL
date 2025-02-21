@@ -38,6 +38,13 @@ Mesh::~Mesh()
     glDeleteVertexArrays(1, &_VAO);
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_EBO);
+
+    // TODO vector使用有问题
+    for (int index = _textures.size() - 1; ~index; --index)
+    {
+        Texture::Destroy(_textures[index]);
+    }
+
     _vertices.clear();
     _indices.clear();
     _textures.clear();
@@ -54,7 +61,7 @@ void Mesh::draw(Shader *shader)
     {
         Texture *tex = _textures[index];
         std::string number;
-        std::string name = tex->getName();
+        std::string name = tex->getType();
         if (name == "texture_diffuse")
         {
             number = std::to_string(diffuseNr++);
@@ -96,10 +103,10 @@ void Mesh::setupMesh()
 
     // 设置顶点属性
     // 顶点坐标
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, position));
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Position));
     glEnableVertexAttribArray(0);
     // 法线
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
     glEnableVertexAttribArray(1);
     // 纹理坐标
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));

@@ -36,8 +36,6 @@ basic_lighting::~basic_lighting()
     _meshLight = nullptr;
     _shaderCube = nullptr;
     _shaderLight = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void basic_lighting::onInit(GLFWwindow *window)
@@ -46,8 +44,8 @@ void basic_lighting::onInit(GLFWwindow *window)
     _camera = new Camera(window);
     Camera::SetMainCamera(_camera);
     
-    Texture *cube_texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    Texture *cube_texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    Texture *cube_texture0 = Texture::Load("texture0", "container.jpg");
+    Texture *cube_texture1 = Texture::Load("texture1", "awesomeface.png");
     std::vector<Texture*> cube_texture_vector = {
         cube_texture0,
         cube_texture1,
@@ -112,9 +110,15 @@ int main()
 {
     Window *window1 = new basic_lighting("2_basic_lighting_ambient", 800, 600, "2_lighting/2_basic_lighting.vs", "2_lighting/2_basic_lighting_ambient.fs");
     window1->start();
+    delete window1;
+
     Window *window2 = new basic_lighting("2_basic_lighting_diffuse", 800, 600, "2_lighting/2_basic_lighting.vs", "2_lighting/2_basic_lighting_diffuse.fs");
     window2->start();
+    delete window2;
+
     Window *window3 = new basic_lighting("2_basic_lighting_specular", 800, 600, "2_lighting/2_basic_lighting.vs", "2_lighting/2_basic_lighting_specular.fs");
     window3->start();
+    delete window3;
+
     return 0;
 }

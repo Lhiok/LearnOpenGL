@@ -33,5 +33,7 @@ int main()
 {
     Window *window = new hello_window("1_hello_window", 800, 600);
     window->start();
+    delete window;
+    
     return 0;
 }

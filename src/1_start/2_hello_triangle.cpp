@@ -223,7 +223,11 @@ int main()
 {
     Window *window1 = new hello_triangle("2_hello_triangle", 800, 600);
     window1->start();
+    delete window1;
+
     Window *window2 = new hello_rectangle("2_hello_rectangle", 800, 600);
     window2->start();
+    delete window2;
+    
     return 0;
 }

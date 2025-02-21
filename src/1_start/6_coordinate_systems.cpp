@@ -50,13 +50,11 @@ coordinate_systems_square::~coordinate_systems_square()
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_EBO);
     delete _shader;
-    delete _texture0;
-    delete _texture1;
+    Texture::Destroy(_texture0);
+    Texture::Destroy(_texture1);
     _shader = nullptr;
     _texture0 = nullptr;
     _texture1 = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void coordinate_systems_square::onInit(GLFWwindow *window)
@@ -84,8 +82,8 @@ void coordinate_systems_square::onInit(GLFWwindow *window)
 
     // 着色器程序
     _shader = new Shader(_vertexPath, _fragmentPath);
-    _texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    _texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    _texture0 = Texture::Load("texture0", "container.jpg");
+    _texture1 = Texture::Load("texture1", "awesomeface.png");
 }
 
 void coordinate_systems_square::onUpdate(GLFWwindow *window)
@@ -146,13 +144,11 @@ coordinate_systems_cube::~coordinate_systems_cube()
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_EBO);
     delete _shader;
-    delete _texture0;
-    delete _texture1;
+    Texture::Destroy(_texture0);
+    Texture::Destroy(_texture1);
     _shader = nullptr;
     _texture0 = nullptr;
     _texture1 = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void coordinate_systems_cube::onInit(GLFWwindow *window)
@@ -180,8 +176,8 @@ void coordinate_systems_cube::onInit(GLFWwindow *window)
 
     // 着色器程序
     _shader = new Shader(_vertexPath, _fragmentPath);
-    _texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    _texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    _texture0 = Texture::Load("texture0", "container.jpg");
+    _texture1 = Texture::Load("texture1", "awesomeface.png");
 }
 
 void coordinate_systems_cube::onUpdate(GLFWwindow *window)
@@ -245,7 +241,11 @@ int main()
 {
     Window *window1 = new coordinate_systems_square("6_coordinate_system_square", 800, 600, "1_start/coordinateSystems.vs", "1_start/textureMixTexture.fs");
     window1->start();
+    delete window1;
+
     Window *window2 = new coordinate_systems_cube("6_coordinate_system_cube", 800, 600, "1_start/coordinateSystems.vs", "1_start/textureMixTexture.fs");
     window2->start();
+    delete window2;
+    
     return 0;
 }

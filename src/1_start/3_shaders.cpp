@@ -43,8 +43,6 @@ shaders::~shaders()
     glDeleteBuffers(1, &_VBO);
     delete _shader;
     _shader = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void shaders::onInit(GLFWwindow *window)
@@ -103,8 +101,6 @@ shaders2::~shaders2()
     glDeleteBuffers(1, &_VBO);
     delete _shader;
     _shader = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void shaders2::onInit(GLFWwindow *window)
@@ -154,9 +150,15 @@ int main()
 {
     Window *window1 = new shaders("3_shaders_vertexColor", 800, 600, "1_start/vertexColor.vs", "1_start/vertexColor.fs");
     window1->start();
+    delete window1;
+
     Window *window2 = new shaders("3_shaders_uniformColor", 800, 600, "common/base.vs", "1_start/uniformColor.fs");
     window2->start();
+    delete window2;
+
     Window *window3 = new shaders2("3_shaders_attributeColor", 800, 600, "1_start/attributeColor.vs", "1_start/vertexColor.fs");
     window3->start();
+    delete window3;
+    
     return 0;
 }

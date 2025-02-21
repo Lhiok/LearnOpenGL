@@ -43,8 +43,6 @@ materials::~materials()
     _meshLight = nullptr;
     _shaderCube = nullptr;
     _shaderLight = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
 void materials::onInit(GLFWwindow *window)
@@ -53,8 +51,8 @@ void materials::onInit(GLFWwindow *window)
     _camera = new Camera(window);
     Camera::SetMainCamera(_camera);
     
-    Texture *cube_texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    Texture *cube_texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    Texture *cube_texture0 = Texture::Load("texture0", "container.jpg");
+    Texture *cube_texture1 = Texture::Load("texture1", "awesomeface.png");
     std::vector<Texture*> cube_texture_vector = {
         cube_texture0,
         cube_texture1,
@@ -120,5 +118,7 @@ int main()
 {
     Window *window1 = new materials("3_materials", 800, 600, "2_lighting/2_basic_lighting.vs", "2_lighting/3_materials.fs");
     window1->start();
+    delete window1;
+
     return 0;
 }

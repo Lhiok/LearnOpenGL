@@ -4,7 +4,7 @@
 
 #include "global.cpp"
 
-class textures : public Window
+class texture_mix_color : public Window
 {
 private:
     GLuint _VAO, _VBO, _EBO;
@@ -15,11 +15,11 @@ protected:
     virtual void onInit(GLFWwindow *window);
     virtual void onUpdate(GLFWwindow *window);
 public:
-    textures(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
-    ~textures();
+    texture_mix_color(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
+    ~texture_mix_color();
 };
 
-class textures2 : public Window
+class texture_mix_texture : public Window
 {
 private:
     GLuint _VAO, _VBO, _EBO;
@@ -30,32 +30,30 @@ protected:
     virtual void onInit(GLFWwindow *window);
     virtual void onUpdate(GLFWwindow *window);
 public:
-    textures2(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
-    ~textures2();
+    texture_mix_texture(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath);
+    ~texture_mix_texture();
 };
 
 /**************************************************** textures ****************************************************/
 
-textures::textures(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath) : Window(name, width, height)
+texture_mix_color::texture_mix_color(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath) : Window(name, width, height)
 {
     _vertexPath = vertexPath;
     _fragmentPath = fragmentPath;
 }
 
-textures::~textures()
+texture_mix_color::~texture_mix_color()
 {
     glDeleteVertexArrays(1, &_VAO);
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_EBO);
     delete _shader;
-    delete _texture0;
+    Texture::Destroy(_texture0);
     _shader = nullptr;
     _texture0 = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
-void textures::onInit(GLFWwindow *window)
+void texture_mix_color::onInit(GLFWwindow *window)
 {
     // 顶点数组对象
     glGenVertexArrays(1, &_VAO);
@@ -83,10 +81,10 @@ void textures::onInit(GLFWwindow *window)
 
     // 着色器程序
     _shader = new Shader(_vertexPath, _fragmentPath);
-    _texture0 = new Texture("ourTexture", "container.jpg", GL_RGB);
+    _texture0 = Texture::Load("ourTexture", "container.jpg");
 }
 
-void textures::onUpdate(GLFWwindow *window)
+void texture_mix_color::onUpdate(GLFWwindow *window)
 {
     _shader->use();
 
@@ -99,28 +97,26 @@ void textures::onUpdate(GLFWwindow *window)
 
 /**************************************************** textures ****************************************************/
 
-textures2::textures2(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath) : Window(name, width, height)
+texture_mix_texture::texture_mix_texture(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath) : Window(name, width, height)
 {
     _vertexPath = vertexPath;
     _fragmentPath = fragmentPath;
 }
 
-textures2::~textures2()
+texture_mix_texture::~texture_mix_texture()
 {
     glDeleteVertexArrays(1, &_VAO);
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_EBO);
     delete _shader;
-    delete _texture0;
-    delete _texture1;
+    Texture::Destroy(_texture0);
+    Texture::Destroy(_texture1);
     _shader = nullptr;
     _texture0 = nullptr;
     _texture1 = nullptr;
-    _vertexPath = nullptr;
-    _fragmentPath = nullptr;
 }
 
-void textures2::onInit(GLFWwindow *window)
+void texture_mix_texture::onInit(GLFWwindow *window)
 {
     // 顶点数组对象
     glGenVertexArrays(1, &_VAO);
@@ -148,11 +144,11 @@ void textures2::onInit(GLFWwindow *window)
 
     // 着色器程序
     _shader = new Shader(_vertexPath, _fragmentPath);
-    _texture0 = new Texture("texture0", "container.jpg", GL_RGB);
-    _texture1 = new Texture("texture1", "awesomeface.png", GL_RGBA);
+    _texture0 = Texture::Load("texture0", "container.jpg");
+    _texture1 = Texture::Load("texture1", "awesomeface.png");
 }
 
-void textures2::onUpdate(GLFWwindow *window)
+void texture_mix_texture::onUpdate(GLFWwindow *window)
 {
     _shader->use();
 
@@ -174,9 +170,13 @@ void textures2::onUpdate(GLFWwindow *window)
 
 int main()
 {
-    Window *window1 = new textures("4_textures_textureMixColor", 800, 600, "1_start/textureMixColor.vs", "1_start/textureMixColor.fs");
+    Window *window1 = new texture_mix_color("4_texture_mix_color", 800, 600, "1_start/textureMixColor.vs", "1_start/textureMixColor.fs");
     window1->start();
-    Window *window2 = new textures2("4_textures_textureMixColor", 800, 600, "1_start/textureMixColor.vs", "1_start/textureMixTexture.fs");
+    delete window1;
+
+    Window *window2 = new texture_mix_texture("4_texture_mix_texture", 800, 600, "1_start/textureMixColor.vs", "1_start/textureMixTexture.fs");
     window2->start();
+    delete window2;
+    
     return 0;
 }
