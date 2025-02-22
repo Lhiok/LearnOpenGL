@@ -6,6 +6,7 @@
 
 #include <vector>
 
+// 立方体顶点坐标
 std::vector<Vertex> cube_vertices_vector = {
     // 正面
     {
@@ -14,9 +15,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(0.0f, 0.0f),
     },
     {
-        glm::vec3(-0.5f, +0.5f, +0.5f),
+        glm::vec3(+0.5f, -0.5f, +0.5f),
         glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
     },
     {
         glm::vec3(+0.5f, +0.5f, +0.5f),
@@ -24,9 +25,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(1.0f, 1.0f),
     },
     {
-        glm::vec3(+0.5f, -0.5f, +0.5f),
+        glm::vec3(-0.5f, +0.5f, +0.5f),
         glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
     },
     // 背面
     {
@@ -35,9 +36,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(0.0f, 0.0f),
     },
     {
-        glm::vec3(+0.5f, +0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, -0.5f),
         glm::vec3(0.0f, 0.0f, -1.0f),
-        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
     },
     {
         glm::vec3(-0.5f, +0.5f, -0.5f),
@@ -45,9 +46,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(1.0f, 1.0f),
     },
     {
-        glm::vec3(-0.5f, -0.5f, -0.5f),
+        glm::vec3(+0.5f, +0.5f, -0.5f),
         glm::vec3(0.0f, 0.0f, -1.0f),
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
     },
     // 左边
     {
@@ -56,9 +57,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(0.0f, 0.0f),
     },
     {
-        glm::vec3(-0.5f, +0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, +0.5f),
         glm::vec3(-1.0f, 0.0f, 0.0f),
-        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
     },
     {
         glm::vec3(-0.5f, +0.5f, +0.5f),
@@ -66,9 +67,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(1.0f, 1.0f),
     },
     {
-        glm::vec3(-0.5f, -0.5f, +0.5f),
+        glm::vec3(-0.5f, +0.5f, -0.5f),
         glm::vec3(-1.0f, 0.0f, 0.0f),
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
     },
     // 右边
     {
@@ -77,9 +78,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(0.0f, 0.0f),
     },
     {
-        glm::vec3(+0.5f, +0.5f, +0.5f),
+        glm::vec3(+0.5f, -0.5f, -0.5f),
         glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
     },
     {
         glm::vec3(+0.5f, +0.5f, -0.5f),
@@ -87,9 +88,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(1.0f, 1.0f),
     },
     {
-        glm::vec3(+0.5f, -0.5f, -0.5f),
+        glm::vec3(+0.5f, +0.5f, +0.5f),
         glm::vec3(1.0f, 0.0f, 0.0f),
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
     },
     // 上边
     {
@@ -98,9 +99,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(0.0f, 0.0f),
     },
     {
-        glm::vec3(-0.5f, +0.5f, -0.5f),
+        glm::vec3(+0.5f, +0.5f, +0.5f),
         glm::vec3(0.0f, 1.0f, 0.0f),
-        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
     },
     {
         glm::vec3(+0.5f, +0.5f, -0.5f),
@@ -108,9 +109,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(1.0f, 1.0f),
     },
     {
-        glm::vec3(+0.5f, +0.5f, +0.5f),
+        glm::vec3(-0.5f, +0.5f, -0.5f),
         glm::vec3(0.0f, 1.0f, 0.0f),
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
     },
     // 下边
     {
@@ -119,9 +120,9 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(0.0f, 0.0f),
     },
     {
-        glm::vec3(-0.5f, -0.5f, +0.5f),
+        glm::vec3(+0.5f, -0.5f, -0.5f),
         glm::vec3(0.0f, -1.0f, 0.0f),
-        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
     },
     {
         glm::vec3(+0.5f, -0.5f, +0.5f),
@@ -129,12 +130,13 @@ std::vector<Vertex> cube_vertices_vector = {
         glm::vec2(1.0f, 1.0f),
     },
     {
-        glm::vec3(+0.5f, -0.5f, -0.5f),
+        glm::vec3(-0.5f, -0.5f, +0.5f),
         glm::vec3(0.0f, -1.0f, 0.0f),
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
     },
 };
 
+// 立方体的顶点索引
 std::vector<unsigned int> cube_indices_vector = {
     // 正面
     0, 1, 2,
@@ -156,6 +158,7 @@ std::vector<unsigned int> cube_indices_vector = {
     22, 23, 20,
 };
 
+// 立方体位置
 glm::vec3 cube_positions[] = {
     glm::vec3(+0.0f, +0.0f, +0.0f), 
     glm::vec3(+2.0f, +5.0f, -15.f), 
@@ -169,6 +172,7 @@ glm::vec3 cube_positions[] = {
     glm::vec3(-1.3f, +1.0f, -1.5f),  
 };
 
+// 平行光
 DirectionalLight *light_directional = new DirectionalLight(
     glm::vec3(-0.2f, -1.0f, -0.3f),
     glm::vec3(0.2f, 0.2f, 0.2f),
@@ -176,6 +180,7 @@ DirectionalLight *light_directional = new DirectionalLight(
     glm::vec3(1.0f, 1.0f, 1.0f)
 );
 
+// 平行光-弱
 DirectionalLight *light_directional_weak = new DirectionalLight(
     glm::vec3(-0.2f, -1.0f, -0.3f),
     glm::vec3(0.05f, 0.05f, 0.05f),
@@ -183,6 +188,7 @@ DirectionalLight *light_directional_weak = new DirectionalLight(
     glm::vec3(1.0f, 1.0f, 1.0f)
 );
 
+// 点光源
 PointLight *light_point = new PointLight(
     glm::vec3(1.2f, 1.0f, 2.0f),
     1.0f,
@@ -193,6 +199,7 @@ PointLight *light_point = new PointLight(
     glm::vec3(1.0f, 1.0f, 1.0f)
 );
 
+// 一堆点光源
 std::vector<PointLight*> light_point_vector = {
     new PointLight(
         glm::vec3(0.7f, 0.2f, 2.0f),
@@ -232,6 +239,7 @@ std::vector<PointLight*> light_point_vector = {
     )
 };
 
+// 聚光灯
 SpotLight *light_spot = new SpotLight(
     glm::vec3(1.2f, 1.0f, 2.0f),
     glm::vec3(0.0f, 0.0f, -1.0f),
@@ -242,6 +250,7 @@ SpotLight *light_spot = new SpotLight(
     glm::vec3(1.0f, 1.0f, 1.0f)
 );
 
+// 矩形顶点坐标
 std::vector<Vertex> rectangle_vertices_vector = {
     {
         glm::vec3(-0.5f, -0.5f, +0.0f),
@@ -249,9 +258,9 @@ std::vector<Vertex> rectangle_vertices_vector = {
         glm::vec2(0.0f, 0.0f),
     },
     {
-        glm::vec3(-0.5f, +0.5f, +0.0f),
+        glm::vec3(+0.5f, -0.5f, +0.0f),
         glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
     },
     {
         glm::vec3(+0.5f, +0.5f, +0.0f),
@@ -259,12 +268,13 @@ std::vector<Vertex> rectangle_vertices_vector = {
         glm::vec2(1.0f, 1.0f),
     },
     {
-        glm::vec3(+0.5f, -0.5f, +0.0f),
+        glm::vec3(-0.5f, +0.5f, +0.0f),
         glm::vec3(0.0f, 0.0f, 1.0f),
-        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
     },
 };
 
+// 矩形顶点索引
 std::vector<unsigned int> rectangle_indices_vector = {
     0, 1, 3,
     1, 2, 3,

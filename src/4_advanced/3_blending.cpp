@@ -77,7 +77,6 @@ void discard::onUpdate(GLFWwindow *window)
     _shaderGrass->use();
     _shaderGrass->setmat4fv("view", glm::value_ptr(_camera->view()));
     _shaderGrass->setmat4fv("projection", glm::value_ptr(_camera->projection()));
-
     for (int index = 0, len = grass_position_vector.size(); index < len; ++index)
     {
         glm::mat4 modelGrass = glm::mat4(1.0f);
