@@ -280,4 +280,28 @@ std::vector<unsigned int> rectangle_indices_vector = {
     1, 2, 3,
 };
 
+// 屏幕顶点坐标
+std::vector<Vertex> screen_vertices_vector = {
+    {
+        glm::vec3(-1.0f, -1.0f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+    },
+    {
+        glm::vec3(+1.0f, -1.0f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+    },
+    {
+        glm::vec3(+1.0f, +1.0f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+    },
+    {
+        glm::vec3(-1.0f, +1.0f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+    },
+};
+
 #endif
