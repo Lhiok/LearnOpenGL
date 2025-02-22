@@ -242,4 +242,32 @@ SpotLight *light_spot = new SpotLight(
     glm::vec3(1.0f, 1.0f, 1.0f)
 );
 
+std::vector<Vertex> rectangle_vertices_vector = {
+    {
+        glm::vec3(-0.5f, -0.5f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(0.0f, 0.0f),
+    },
+    {
+        glm::vec3(-0.5f, +0.5f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(0.0f, 1.0f),
+    },
+    {
+        glm::vec3(+0.5f, +0.5f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f),
+    },
+    {
+        glm::vec3(+0.5f, -0.5f, +0.0f),
+        glm::vec3(0.0f, 0.0f, 1.0f),
+        glm::vec2(1.0f, 0.0f),
+    },
+};
+
+std::vector<unsigned int> rectangle_indices_vector = {
+    0, 1, 3,
+    1, 2, 3,
+};
+
 #endif

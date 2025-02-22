@@ -1,7 +1,9 @@
 # 添加可执行程序
 add_executable(1_depth_testing 1_depth_testing.cpp)
 add_executable(2_stencil_testing 2_stencil_testing.cpp)
+add_executable(3_blending 3_blending.cpp)
 
 # 链接lib glfw glad.c
 target_link_libraries(1_depth_testing ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
 target_link_libraries(2_stencil_testing ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
+target_link_libraries(3_blending ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
