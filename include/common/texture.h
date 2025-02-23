@@ -2,8 +2,11 @@
 #define TEXTURE_H
 
 #include <glad/glad.h>
+
+#ifndef STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+#endif
 
 #include <map>
 #include <string>
