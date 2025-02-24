@@ -27,6 +27,7 @@ public:
     GLvoid set4f(const GLchar *name, GLfloat x, GLfloat y, GLfloat z, GLfloat w) { glUniform4f(getUniformLocation(name), x, y, z, w); }
     GLvoid setmat3fv(const GLchar *name, const GLfloat *value) { glUniformMatrix3fv(getUniformLocation(name), 1, GL_FALSE, value); }
     GLvoid setmat4fv(const GLchar *name, const GLfloat *value) { glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, value); }
+    GLvoid bindUniformBlock(const GLchar *name, GLuint index) { glUniformBlockBinding(_programID, glGetUniformBlockIndex(_programID, name), index); }
 };
 
 std::string Shader::_SHADER_BASE_PATH = "./../../../shader/";
