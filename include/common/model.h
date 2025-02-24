@@ -10,8 +10,9 @@
 class Model
 {
 private:
-    std::vector<Mesh*> _meshes;
+    int _maxTextureSize;
     std::string _directory;
+    std::vector<Mesh*> _meshes;
     void loadModel(std::string path);
     void processNode(aiNode *node, const aiScene *scene);
     Mesh *processMesh(aiMesh *mesh, const aiScene *scene);
@@ -21,6 +22,7 @@ public:
     Model(std::string path);
     ~Model();
     void draw(Shader *shader);
+    int getMaxTextureSize() { return _maxTextureSize; }
 };
 
 std::string Model::_MODEL_BASE_PATH = "./../../../assets/";
@@ -65,6 +67,7 @@ void Model::loadModel(std::string path)
         return;
     }
 
+    _maxTextureSize = 0;
     _directory = path.substr(0, path.find_last_of('/') + 1);
     processNode(scene->mRootNode, scene);
 }
@@ -75,7 +78,9 @@ void Model::processNode(aiNode *node, const aiScene *scene)
     for (int index = 0, len = node->mNumMeshes; index < len; ++index)
     {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[index]];
-        _meshes.push_back(processMesh(mesh, scene));
+        Mesh *meshInfo = processMesh(mesh, scene);
+        _meshes.push_back(meshInfo);
+        _maxTextureSize = std::max(_maxTextureSize, meshInfo->getTextureCount());
     }
 
     // 递归处理每个子节点
@@ -129,6 +134,8 @@ Mesh *Model::processMesh(aiMesh *mesh, const aiScene *scene)
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         std::vector<Texture*> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+        std::vector<Texture*> reflectMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_reflect");
+        textures.insert(textures.end(), reflectMaps.begin(), reflectMaps.end());
     }
 
     return new Mesh(vertices, indices, textures);

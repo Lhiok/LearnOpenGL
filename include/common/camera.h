@@ -9,6 +9,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <algorithm>
+
 enum ECameraUpdateFlag
 {
     None = 0,
@@ -186,6 +188,8 @@ void Camera::onMouseMove(GLFWwindow *window, double xPos, double yPos)
     Camera::_lastPosY = yPos;
     Camera::main->_yaw += xOffset * Camera::_sensitivity;
     Camera::main->_pitch -= yOffset * Camera::_sensitivity;
+    // 限制俯仰角
+    Camera::main->_pitch = std::clamp(Camera::main->_pitch, -89.0f, 89.0f);
     Camera::main->_flag |= ECameraUpdateFlag::Front | ECameraUpdateFlag::View;
 }
 

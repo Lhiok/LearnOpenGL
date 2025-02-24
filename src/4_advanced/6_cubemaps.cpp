@@ -24,7 +24,7 @@ public:
     ~cubemaps_skybox();
 };
 
-class cubemaps_reflection : public Window
+class cubemaps_reflect_refract : public Window
 {
 private:
     GLuint _vaoSkybox, _vboSkybox;
@@ -32,12 +32,29 @@ private:
     Mesh *_meshCube;
     TextureCube *_textureCubeSkybox;
     Shader *_shaderCube, *_shaderSkybox;
+    std::string _vertexPath, _fragmentPath;
 protected:
     virtual void onInit(GLFWwindow *window);
     virtual void onUpdate(GLFWwindow *window);
 public:
-    cubemaps_reflection(const GLchar *name, GLuint width, GLuint height) : Window(name, width, height) { }
-    ~cubemaps_reflection();
+    cubemaps_reflect_refract(const GLchar *name, GLuint width, GLuint height, std::string vertexPath, std::string fragmentPath) : Window(name, width, height) { _vertexPath = vertexPath; _fragmentPath = fragmentPath; }
+    ~cubemaps_reflect_refract();
+};
+
+class cubemaps_texture_reflect : public Window
+{
+private:
+    GLuint _vaoSkybox, _vboSkybox;
+    Camera *_camera;
+    Model *_modelRobot;
+    TextureCube *_textureCubeSkybox;
+    Shader *_shaderRobot, *_shaderSkybox;
+protected:
+    virtual void onInit(GLFWwindow *window);
+    virtual void onUpdate(GLFWwindow *window);
+public:
+    cubemaps_texture_reflect(const GLchar *name, GLuint width, GLuint height) : Window(name, width, height) { }
+    ~cubemaps_texture_reflect();
 };
 
 /**************************************************** cubemaps_skybox ****************************************************/
@@ -141,9 +158,9 @@ void cubemaps_skybox::onUpdate(GLFWwindow *window)
     glDepthFunc(GL_LESS);
 }
 
-/**************************************************** cubemaps_reflection ****************************************************/
+/**************************************************** cubemaps_reflect_refract ****************************************************/
 
-cubemaps_reflection::~cubemaps_reflection()
+cubemaps_reflect_refract::~cubemaps_reflect_refract()
 {
     glDeleteVertexArrays(1, &_vaoSkybox);
     glDeleteBuffers(1, &_vboSkybox);
@@ -159,11 +176,11 @@ cubemaps_reflection::~cubemaps_reflection()
     _shaderSkybox = nullptr;
 }
 
-void cubemaps_reflection::onInit(GLFWwindow *window)
+void cubemaps_reflect_refract::onInit(GLFWwindow *window)
 {
     Camera::SetMainCamera(_camera = new Camera(window));
     _meshCube = new Mesh(cube_vertices_vector, cube_indices_vector, std::vector<Texture*> { });
-    _shaderCube = new Shader("4_advanced/6_cubemaps_reflection.vs", "4_advanced/6_cubemaps_reflection.fs");
+    _shaderCube = new Shader(_vertexPath, _fragmentPath);
     
     _textureCubeSkybox = new TextureCube(skybox_resource_vector);
     _shaderSkybox = new Shader("common/skybox.vs", "common/skybox.fs");
@@ -183,7 +200,7 @@ void cubemaps_reflection::onInit(GLFWwindow *window)
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void cubemaps_reflection::onUpdate(GLFWwindow *window)
+void cubemaps_reflect_refract::onUpdate(GLFWwindow *window)
 {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -195,7 +212,7 @@ void cubemaps_reflection::onUpdate(GLFWwindow *window)
     _shaderCube->setmat4fv("view", glm::value_ptr(_camera->view()));
     _shaderCube->setmat4fv("projection", glm::value_ptr(_camera->projection()));
     glm::vec3 viewPos = _camera->position();
-    _shaderCube->set3f("cameraPos", viewPos.x, viewPos.y, viewPos.z);
+    _shaderCube->set3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
     // 绑定纹理
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, _textureCubeSkybox->getTexID());
@@ -224,19 +241,117 @@ void cubemaps_reflection::onUpdate(GLFWwindow *window)
     glDepthFunc(GL_LESS);
 }
 
+/**************************************************** cubemaps_texture_reflect ****************************************************/
+
+cubemaps_texture_reflect::~cubemaps_texture_reflect()
+{
+    glDeleteVertexArrays(1, &_vaoSkybox);
+    glDeleteBuffers(1, &_vboSkybox);
+    delete _camera;
+    delete _modelRobot;
+    delete _textureCubeSkybox;
+    delete _shaderRobot;
+    delete _shaderSkybox;
+    _camera = nullptr;
+    _modelRobot = nullptr;
+    _textureCubeSkybox = nullptr;
+    _shaderRobot = nullptr;
+    _shaderSkybox = nullptr;
+}
+
+void cubemaps_texture_reflect::onInit(GLFWwindow *window)
+{
+    Camera::SetMainCamera(_camera = new Camera(window));
+    _modelRobot = new Model("nanosuit_reflection/nanosuit.obj");
+    _shaderRobot = new Shader("4_advanced/6_cubemaps_robot.vs", "4_advanced/6_cubemaps_robot.fs");
+    
+    _textureCubeSkybox = new TextureCube(skybox_resource_vector);
+    _shaderSkybox = new Shader("common/skybox.vs", "common/skybox.fs");
+
+    // 创建VAO
+    glGenVertexArrays(1, &_vaoSkybox);
+    glBindVertexArray(_vaoSkybox);
+    // 创建VBO
+    glGenBuffers(1, &_vboSkybox);
+    glBindBuffer(GL_ARRAY_BUFFER, _vboSkybox);
+    glBufferData(GL_ARRAY_BUFFER, skybox_vertices_vector.size() * sizeof(float), &skybox_vertices_vector[0], GL_STATIC_DRAW);
+    // 设置顶点属性
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+    // 解绑
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void cubemaps_texture_reflect::onUpdate(GLFWwindow *window)
+{
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    // 绘制场景
+    _shaderRobot->use();
+    _shaderRobot->setmat4fv("model", glm::value_ptr(glm::mat4(1.0f)));
+    _shaderRobot->setmat4fv("view", glm::value_ptr(_camera->view()));
+    _shaderRobot->setmat4fv("projection", glm::value_ptr(_camera->projection()));
+    glm::vec3 viewPos = _camera->position();
+    _shaderRobot->set3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
+    // 绑定纹理
+    int textureIndex = _modelRobot->getMaxTextureSize();
+    glActiveTexture(GL_TEXTURE0 + textureIndex);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, _textureCubeSkybox->getTexID());
+    _shaderRobot->set1i("skybox", textureIndex);
+    _modelRobot->draw(_shaderRobot);
+
+    // 设置深度测试方法为小于等于
+    glDepthFunc(GL_LEQUAL);
+
+    // 绘制天空盒
+    _shaderSkybox->use();
+    // 天空盒不需要model矩阵
+    // 去除相机位移对天空影响 仅保留旋转、缩放
+    glm::mat4 view = _camera->view();
+    view = glm::mat4(glm::mat3(view));
+    _shaderSkybox->setmat4fv("view", glm::value_ptr(view));
+    _shaderSkybox->setmat4fv("projection", glm::value_ptr(_camera->projection()));
+    // 绑定纹理
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, _textureCubeSkybox->getTexID());
+    _shaderSkybox->set1i("skybox", 0);
+    // 绑定VAO
+    glBindVertexArray(_vaoSkybox);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    glDepthFunc(GL_LESS);
+}
+
 /**************************************************** test ****************************************************/
 
 int main()
 {
     // 天空盒
-    // Window *window1 = new cubemaps_skybox("cubemaps_skybox", 800, 600);
+    // Window *window1 = new cubemaps_skybox("6_cubemaps_skybox", 800, 600);
     // window1->start();
     // delete window1;
 
     // 反射
-    Window *window2 = new cubemaps_reflection("6_cubemaps_reflection", 800, 600);
+    Window *window2 = new cubemaps_reflect_refract("6_cubemaps_reflect", 800, 600, "4_advanced/6_cubemaps_cube.vs", "4_advanced/6_cubemaps_reflect.fs");
     window2->start();
     delete window2;
+
+    // 折射
+    Window *window3 = new cubemaps_reflect_refract("6_cubemaps_refract", 800, 600, "4_advanced/6_cubemaps_cube.vs", "4_advanced/6_cubemaps_refract.fs");
+    window3->start();
+    delete window3;
+
+    // 动态环境贴图
+    // 为物体6个角度创建出场景纹理并存储到立方体贴图中
+    // 开销大 可预处理生成
+
+    // 反射贴图
+    Window *window4 = new cubemaps_texture_reflect("6_cubemaps_texture_reflect", 800, 600);
+    window4->start();
+    delete window4;
 
     return 0;
 }
