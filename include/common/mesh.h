@@ -22,8 +22,10 @@ private:
 public:
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures);
     ~Mesh();
-    void draw(Shader *shader);
+    void draw(Shader *shader, GLsizei instanceCount = 0);
     int getTextureCount() { return _textures.size(); }
+    // 测试用
+    GLuint getVAO() { return _VAO; }
 };
 
 Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture*> textures)
@@ -54,7 +56,7 @@ Mesh::~Mesh()
     _textures.shrink_to_fit();
 }
 
-void Mesh::draw(Shader *shader)
+void Mesh::draw(Shader *shader, GLsizei instanceCount)
 {
     int diffuseNr = 0;
     int specularNr = 0;
@@ -80,7 +82,15 @@ void Mesh::draw(Shader *shader)
     }
 
     glBindVertexArray(_VAO);
-    glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+    
+    if (instanceCount > 0)
+    {
+        glDrawElementsInstanced(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0, instanceCount);
+    }
+    else
+    {
+        glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, 0);
+    }
     
     glBindVertexArray(0);
     glActiveTexture(GL_TEXTURE0);

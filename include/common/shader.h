@@ -15,7 +15,8 @@ private:
     GLuint createShader(GLenum type, std::string shaderPath);
     static std::string _SHADER_BASE_PATH;
 public:
-    Shader(std::string vertexPath, std::string fragmentPath);
+    Shader(std::string vertexPath, std::string fragmentPath) : Shader(vertexPath, "", fragmentPath) {}
+    Shader(std::string vertexPath, std::string geometryPath, std::string fragmentPath);
     ~Shader();
     GLvoid use();
     GLuint getProgramID() { return _programID; }
@@ -32,16 +33,25 @@ public:
 
 std::string Shader::_SHADER_BASE_PATH = "./../../../shader/";
 
-Shader::Shader(std::string vertexPath, std::string fragmentPath)
+Shader::Shader(std::string vertexPath, std::string geometryPath, std::string fragmentPath)
 {
-    GLuint vertexShader = createShader(GL_VERTEX_SHADER, vertexPath);
-    GLuint fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentPath);
+    GLuint vertexShader, geometryShader, fragmentShader;
     _programID = glCreateProgram();
+    // 顶点着色器
+    vertexShader = createShader(GL_VERTEX_SHADER, vertexPath);
     glAttachShader(_programID, vertexShader);
+    // 几何着色器
+    if (!geometryPath.empty())
+    {
+        geometryShader = createShader(GL_GEOMETRY_SHADER, geometryPath);
+        glAttachShader(_programID, geometryShader);
+    }
+    // 片段着色器
+    fragmentShader = createShader(GL_FRAGMENT_SHADER, fragmentPath);
     glAttachShader(_programID, fragmentShader);
-    glLinkProgram(_programID);
-    // 检查链接错误
+    // 链接并检查错误
     GLint success;
+    glLinkProgram(_programID);
     glGetProgramiv(_programID, GL_LINK_STATUS, &success);
     if(!success)
     {
@@ -53,6 +63,10 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
     // 链接成功后删除着色器
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+    if (!geometryPath.empty())
+    {
+        glDeleteShader(geometryShader);
+    }
 }
 
 Shader::~Shader()

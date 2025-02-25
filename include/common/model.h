@@ -21,8 +21,10 @@ private:
 public:
     Model(std::string path);
     ~Model();
-    void draw(Shader *shader);
+    void draw(Shader *shader, GLsizei instanceCount = 0);
     int getMaxTextureSize() { return _maxTextureSize; }
+    // 测试用
+    std::vector<Mesh*> getMeshes() { return _meshes; }
 };
 
 std::string Model::_MODEL_BASE_PATH = "./../../../assets/";
@@ -42,11 +44,11 @@ Model::~Model()
     _meshes.shrink_to_fit();
 }
 
-void Model::draw(Shader *shader)
+void Model::draw(Shader *shader, GLsizei instanceCount)
 {
     for (int index = 0, len = _meshes.size(); index < len; ++index)
     {
-        _meshes[index]->draw(shader);
+        _meshes[index]->draw(shader, instanceCount);
     }
 }
 
