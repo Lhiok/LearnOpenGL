@@ -8,11 +8,12 @@
 class Window
 {
 private:
-    const GLchar *_name;
+    std::string _name;
     GLuint _width;
     GLuint _height;
     GLFWwindow *_window;
-    float _lastFrameTime, _deltaTime;
+    int _frameCount;
+    float _lastFrameTime, _deltaTime, _deltaTimeAcc;
     static bool _glfwInited;
     static bool _gladInited;
     static void onWindowSizeChange(GLFWwindow* window, int width, int height);
@@ -21,7 +22,7 @@ protected:
     virtual void onUpdate(GLFWwindow *window) {}
     virtual void processInput(GLFWwindow *window);
 public:
-    Window(const GLchar *name, GLuint width, GLuint height);
+    Window(std::string name, GLuint width, GLuint height);
     virtual ~Window();
     void start();
 };
@@ -29,7 +30,7 @@ public:
 bool Window::_glfwInited = false;
 bool Window::_gladInited = false;
 
-Window::Window(const GLchar *name, GLuint width, GLuint height)
+Window::Window(std::string name, GLuint width, GLuint height)
 {
     _name = name;
     _width = width;
@@ -61,7 +62,7 @@ void Window::start()
     if (_window == nullptr)
     {
         // 创建窗口对象
-        _window = glfwCreateWindow(_width, _height, _name, NULL, NULL);
+        _window = glfwCreateWindow(_width, _height, _name.c_str(), NULL, NULL);
         if (_window == nullptr)
         {
             std::cout << "Failed to create GLFW window" << std::endl;
@@ -99,6 +100,8 @@ void Window::start()
     onInit(_window);
     std::cout << "Window init: " << _name << std::endl;
 
+    _frameCount = 0;
+    _deltaTimeAcc = 0.0f;
     _lastFrameTime = glfwGetTime();
 
     // 渲染循环
@@ -107,6 +110,16 @@ void Window::start()
         float currentFrameTime = glfwGetTime();
         _deltaTime = currentFrameTime - _lastFrameTime;
         _lastFrameTime = currentFrameTime;
+        _frameCount++;
+        _deltaTimeAcc += _deltaTime;
+
+        if (_deltaTimeAcc >= 1.0f)
+        {
+            float fps = _frameCount / _deltaTimeAcc;
+            glfwSetWindowTitle(_window, (_name + "  FPS: " + std::to_string((int)(fps * 100) / 100)).c_str());
+            _frameCount = 0;
+            _deltaTimeAcc -= 1.0f;
+        }
 
         // 设置清空屏幕所用的颜色
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

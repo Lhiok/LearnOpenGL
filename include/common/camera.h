@@ -37,10 +37,11 @@ private:
 public:
     Camera(GLFWwindow *window);
     ~Camera();
-    glm::vec3 position() { return _position; }
     glm::vec3 front();
     glm::mat4 view();
     glm::mat4 projection();
+    glm::vec3 position() { return _position; }
+    void setPosition(float x, float y, float z) { _position = glm::vec3(x, y, z), _flag |= ECameraUpdateFlag::Front | ECameraUpdateFlag::View; }
     static Camera *main;
     static void SetMainCamera(Camera *camera);
     static void onKeyInput(GLFWwindow *window, float deltaTime);
