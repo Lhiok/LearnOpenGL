@@ -360,4 +360,34 @@ std::vector<std::string> skybox_resource_vector = {
     "skybox/back.jpg",
 };
 
+// 地板顶点属性
+std::vector<Vertex> floor_vertices_vector = {
+    {
+        glm::vec3(-1.0f, +0.0f, +1.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec2(0.0f, 0.0f),
+    },
+    {
+        glm::vec3(+1.0f, +0.0f, +1.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+    },
+    {
+        glm::vec3(+1.0f, +0.0f, -1.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec2(1.0f, 1.0f),
+    },
+    {
+        glm::vec3(-1.0f, +0.0f, -1.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
+    },
+};
+
+// 地板顶点索引
+std::vector<unsigned int> floor_indices_vector = {
+    0, 1, 2,
+    2, 3, 0,
+};
+
 #endif
