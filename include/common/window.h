@@ -1,6 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include "input.h"
 #include "camera.h"
 
 #include <iostream>
@@ -22,7 +23,7 @@ protected:
     virtual void onUpdate(GLFWwindow *window) {}
     virtual void processInput(GLFWwindow *window);
 public:
-    Window(std::string name, GLuint width, GLuint height);
+    Window(std::string name, GLuint width, GLuint height) { _name = name; _width = width; _height = height, _window = nullptr; };
     virtual ~Window();
     void start();
 };
@@ -30,16 +31,9 @@ public:
 bool Window::_glfwInited = false;
 bool Window::_gladInited = false;
 
-Window::Window(std::string name, GLuint width, GLuint height)
-{
-    _name = name;
-    _width = width;
-    _height = height;
-    _window = nullptr;
-}
-
 Window::~Window()
 {
+    // 销毁窗口
     glfwDestroyWindow(_window);
     _window = nullptr;
 }
@@ -104,6 +98,9 @@ void Window::start()
     _deltaTimeAcc = 0.0f;
     _lastFrameTime = glfwGetTime();
 
+    // 启用输入
+    Input::enableInput(_window);
+
     // 渲染循环
     while (!glfwWindowShouldClose(_window))
     {
@@ -128,6 +125,8 @@ void Window::start()
 
         // 处理输入
         processInput(_window);
+        // 更新输入标记
+        Input::update(_window);
         // 渲染
         onUpdate(_window);
 
@@ -136,13 +135,16 @@ void Window::start()
         // 交换缓冲
         glfwSwapBuffers(_window);
     }
+
+    // 关闭输入
+    Input::disableInput(_window);
 }
 
 void Window::processInput(GLFWwindow *window)
 {
-    Camera::onKeyInput(window, _deltaTime);
+    Camera::processInput(window, _deltaTime);
 
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (Input::isKeyDown(window, GLFW_KEY_ESCAPE))
     {
         glfwSetWindowShouldClose(window, true);
     }

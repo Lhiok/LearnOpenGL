@@ -44,7 +44,7 @@ public:
     void setPosition(float x, float y, float z) { _position = glm::vec3(x, y, z), _flag |= ECameraUpdateFlag::Front | ECameraUpdateFlag::View; }
     static Camera *main;
     static void SetMainCamera(Camera *camera);
-    static void onKeyInput(GLFWwindow *window, float deltaTime);
+    static void processInput(GLFWwindow *window, float deltaTime);
 };
 
 bool Camera::_inited = false;
@@ -115,29 +115,29 @@ glm::mat4 Camera::projection()
     return _projection;
 }
 
-void Camera::onKeyInput(GLFWwindow *window, float deltaTime)
+void Camera::processInput(GLFWwindow *window, float deltaTime)
 {
     if (Camera::main == nullptr || Camera::main->_window != window)
     {
         return;
     }
     float cameraSpeed = Camera::_moveSpeed * deltaTime;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+    if (Input::isKeyHold(window, GLFW_KEY_W) || Input::isKeyHold(window, GLFW_KEY_UP))
     {
         Camera::main->_flag |= ECameraUpdateFlag::View;
         Camera::main->_position += Camera::main->front() * cameraSpeed;
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+    if (Input::isKeyHold(window, GLFW_KEY_S) || Input::isKeyHold(window, GLFW_KEY_DOWN))
     {
         Camera::main->_flag |= ECameraUpdateFlag::View;
         Camera::main->_position -= Camera::main->front() * cameraSpeed;
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    if (Input::isKeyHold(window, GLFW_KEY_A) || Input::isKeyHold(window, GLFW_KEY_LEFT))
     {
         Camera::main->_flag |= ECameraUpdateFlag::View;
         Camera::main->_position -= glm::normalize(glm::cross(Camera::main->front(), Camera::main->_up)) * cameraSpeed;
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    if (Input::isKeyHold(window, GLFW_KEY_D) || Input::isKeyHold(window, GLFW_KEY_RIGHT))
     {
         Camera::main->_flag |= ECameraUpdateFlag::View;
         Camera::main->_position += glm::normalize(glm::cross(Camera::main->front(), Camera::main->_up)) * cameraSpeed;
