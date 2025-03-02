@@ -27,9 +27,11 @@ in VS_OUT {
 } fs_in;
 
 uniform vec3 viewPos;
-uniform bool bBlinnPhong;
 uniform Material material;
 uniform PointLight pointLight;
+
+uniform float gamma;
+uniform bool correctEnable;
 
 void main()
 {
@@ -50,19 +52,15 @@ void main()
 
     // 镜面反射
     float spec = 0.0;
-    // Blinn-Phong模型
-    if (bBlinnPhong)
-    {
-        vec3 halfVec = normalize(viewDir + lightDir);
-        spec = pow(max(dot(Normal, halfVec), 0.0), material.shininess);
-    }
-    // 风式模型
-    else
-    {
-        vec3 reflectDir = reflect(-lightDir, Normal);
-        spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    }
+    vec3 halfVec = normalize(viewDir + lightDir);
+    spec = pow(max(dot(Normal, halfVec), 0.0), material.shininess);
     vec3 specular = pointLight.specular * material.specular * spec;
 
     FragColor = vec4((ambient + diffuse + specular) * attenuation, 1.0);
+    
+    // gamma校正
+    if (correctEnable)
+    {
+        FragColor.rgb = pow(FragColor.rgb, vec3(1.0 / gamma));        
+    }
 }

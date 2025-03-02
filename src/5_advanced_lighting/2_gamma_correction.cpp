@@ -6,10 +6,11 @@
 #include <common/shader.h>
 #include <common/camera.h>
 
-class advanced_lighting : public Window
+class gamma_correction : public Window
 {
 private:
-    bool useBlinnPhong;
+    float gamma;
+    bool correctEnable;
     Camera *_camera;
     Mesh *_meshFloor, *_meshLight;
     Material *_floorMaterial;
@@ -20,13 +21,13 @@ protected:
     virtual void onUpdate(GLFWwindow *window);
     virtual void processInput(GLFWwindow *window);
 public:
-    advanced_lighting(std::string name, GLuint width, GLuint height) : Window(name, width, height) { }
-    ~advanced_lighting();
+    gamma_correction(std::string name, GLuint width, GLuint height) : Window(name, width, height) { }
+    ~gamma_correction();
 };
 
-/**************************************************** advanced_lighting ****************************************************/
+/**************************************************** gamma_correction ****************************************************/
 
-advanced_lighting::~advanced_lighting()
+gamma_correction::~gamma_correction()
 {
     delete _camera;
     delete _meshFloor;
@@ -44,7 +45,7 @@ advanced_lighting::~advanced_lighting()
     _shaderPointLight = nullptr;
 }
 
-void advanced_lighting::onInit(GLFWwindow *window)
+void gamma_correction::onInit(GLFWwindow *window)
 {
     _camera = new Camera(window);
     _camera->setPosition(0.0f, 5.0f, 0.0f);
@@ -52,14 +53,15 @@ void advanced_lighting::onInit(GLFWwindow *window)
     _meshLight = new Mesh(cube_vertices_vector, cube_indices_vector, std::vector<Texture*>());
     _floorMaterial = new Material(32.0f, glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     _pointLight = new PointLight(glm::vec3(0.0f, 5.0f, -20.0f), 1.0f, 0.09f, 0.032f, glm::vec3(0.05f), glm::vec3(0.3f), glm::vec3(1.0f));
-    _shader = new Shader("common/blinn_phong.vs", "common/blinn_phong.fs");
+    _shader = new Shader("5_advanced_lighting/2_gamma_correction.vs", "5_advanced_lighting/2_gamma_correction.fs");
     _shaderPointLight = new Shader("common/light.vs", "common/light.fs");
 
-    useBlinnPhong = true;
-    std::cout << "mode: " << (useBlinnPhong ? "Blinn-Phong" : "Phong") << std::endl;
+    gamma = 2.2f;
+    correctEnable = true;
+    std::cout << (correctEnable ? "enable gamma correct" : "disable gamma correct") << std::endl;
 }
 
-void advanced_lighting::onUpdate(GLFWwindow *window)
+void gamma_correction::onUpdate(GLFWwindow *window)
 {
     _shader->use();
     glm::mat4 model = glm::mat4(1.0f);
@@ -75,8 +77,9 @@ void advanced_lighting::onUpdate(GLFWwindow *window)
     _shader->set3f("viewPos", viewPos.x, viewPos.y, viewPos.z);
     // 光源
     _pointLight->draw(_shader, "pointLight");
-    // 是否使用Blinn-Phong光照
-    _shader->set1i("bBlinnPhong", useBlinnPhong);
+    // 是否开启Gamma校正
+    _shader->set1f("gamma", gamma);
+    _shader->set1i("correctEnable", int(correctEnable));
     // 绘制
     _meshFloor->draw(_shader);
 
@@ -93,12 +96,12 @@ void advanced_lighting::onUpdate(GLFWwindow *window)
     _meshLight->draw(_shaderPointLight);
 }
 
-void advanced_lighting::processInput(GLFWwindow *window)
+void gamma_correction::processInput(GLFWwindow *window)
 {
     if (Input::isKeyDown(window, GLFW_KEY_SPACE))
     {
-        useBlinnPhong = !useBlinnPhong;        
-        std::cout << "mode: " << (useBlinnPhong ? "Blinn-Phong" : "Phong") << std::endl;
+        correctEnable = !correctEnable;
+        std::cout << (correctEnable ? "enable gamma correct" : "disable gamma correct") << std::endl;
     }
 
     Window::processInput(window);
@@ -108,8 +111,8 @@ void advanced_lighting::processInput(GLFWwindow *window)
 
 int main()
 {
-    // Blinn-Phong光照
-    Window *window1 = new advanced_lighting("1_advanced_lighting", 800, 600);
+    // Gamma校正
+    Window *window1 = new gamma_correction("2_gamma_correction", 800, 600);
     window1->start();
     delete window1;
 
