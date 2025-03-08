@@ -132,7 +132,7 @@ void shadow_mapping::onUpdate(GLFWwindow *window)
 
 int main()
 {
-    // Gamma校正
+    // 平行光阴影
     Window *window1 = new shadow_mapping("3_shadow_mapping", 800, 600);
     window1->start();
     delete window1;

@@ -29,6 +29,7 @@ point_shadows::~point_shadows()
     delete _camera;
     delete _pointLight;
     delete _meshBox;
+    delete _meshFloor;
     delete _meshLight;
     delete _shader;
     delete _shaderLight;
@@ -103,8 +104,8 @@ void point_shadows::onUpdate(GLFWwindow *window)
     };
 
     glm::vec3 viewPos = _camera->position();
-    glm::mat4 rockModel = glm::mat4(1.0f);
-    rockModel = glm::translate(rockModel, glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 boxModel = glm::mat4(1.0f);
+    boxModel = glm::translate(boxModel, glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 floorModel = glm::mat4(1.0f);
     floorModel = glm::scale(floorModel, glm::vec3(20.0f));
 
@@ -122,7 +123,7 @@ void point_shadows::onUpdate(GLFWwindow *window)
         _shaderShadow->setmat4fv(("lightSpaceMatrixs[" + std::to_string(i) + "]").c_str(), glm::value_ptr(lightSpaceMatrix[i]));
     }
     _shaderShadow->set1f("farPlane", 100.0f);
-    _shaderShadow->setmat4fv("model", glm::value_ptr(rockModel));
+    _shaderShadow->setmat4fv("model", glm::value_ptr(boxModel));
     _meshBox->draw(_shaderShadow);
     _shaderShadow->setmat4fv("model", glm::value_ptr(floorModel));
     _meshFloor->draw(_shaderShadow);
@@ -150,7 +151,7 @@ void point_shadows::onUpdate(GLFWwindow *window)
     _shader->setmat4fv("projection", glm::value_ptr(_camera->projection()));
     _pointLight->draw(_shader);
     // 箱子
-    _shader->setmat4fv("model", glm::value_ptr(rockModel));
+    _shader->setmat4fv("model", glm::value_ptr(boxModel));
     _meshBox->draw(_shader);
     // 地板
     _shader->setmat4fv("model", glm::value_ptr(floorModel));
@@ -168,7 +169,7 @@ void point_shadows::onUpdate(GLFWwindow *window)
 
 int main()
 {
-    // Gamma校正
+    // 点光源阴影
     Window *window1 = new point_shadows("4_point_shadows", 800, 600);
     window1->start();
     delete window1;

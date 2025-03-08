@@ -122,6 +122,12 @@ void Mesh::setupMesh()
     // 纹理坐标
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
     glEnableVertexAttribArray(2);
+    // 切线信息
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+    glEnableVertexAttribArray(3);
+    // 副切线信息
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+    glEnableVertexAttribArray(4);
 
     // 解绑
     glBindVertexArray(0);
