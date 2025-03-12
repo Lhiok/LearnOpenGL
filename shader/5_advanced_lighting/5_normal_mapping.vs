@@ -43,13 +43,13 @@ void main()
     // 共享顶点平均化切线向量使得TBN不再互相垂直 进行重正交化
     T = normalize(T - dot(T, N) * N);
     vec3 B = cross(T, N);
-    mat3 TBN = mat3(T, B, N);
+    mat3 TBN = transpose(mat3(T, B, N));
 
     vs_out.FragPos = vec3(model * vec4(aPos, 1.0));
     vs_out.Normal = N;
     vs_out.TexCoords = aTexCoords;
     vs_out.TangentLightPos = TBN * light.position;
     vs_out.TangentViewPos = TBN * viewPos;
-    vs_out.FragPos = TBN * vs_out.FragPos;
+    vs_out.TangentFragPos = TBN * vs_out.FragPos;
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

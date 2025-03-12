@@ -74,8 +74,8 @@ void parallax_mapping::onInit(GLFWwindow *window)
         Texture::Load("texture_height", "toy_box_disp.png")
     });
     _mesh2 = new Mesh(floor_vertices_vector, floor_indices_vector, std::vector<Texture*>{
-        Texture::Load("texture_diffuse", "brickwall.jpg"),
-        Texture::Load("texture_normal", "brickwall_normal.jpg"),
+        Texture::Load("texture_diffuse", "bricks2.jpg"),
+        Texture::Load("texture_normal", "bricks2_normal.jpg"),
         Texture::Load("texture_height", "bricks2_disp.jpg")
     });
 }
