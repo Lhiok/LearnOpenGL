@@ -1,6 +1,7 @@
 #version 330 core
 
-out vec4 FragColor;
+layout (location = 0) out vec4 FragColor;
+layout (location = 1) out vec4 BrightColor;
 
 in VS_OUT {
     vec3 FragPos;
@@ -21,8 +22,7 @@ uniform vec3 viewPos;
 void main()
 {
     vec3 color = texture(texture_diffuse0, fs_in.TexCoords).rgb;
-    // 立方体内部法线取反
-    vec3 normal = normalize(-fs_in.Normal);
+    vec3 normal = normalize(fs_in.Normal);
     // 环境光
     vec3 ambient = 0.0 * color;
     // lighting
@@ -38,4 +38,15 @@ void main()
         lighting += diffuse;
     }
     FragColor = vec4(ambient + lighting * color, 1.0);
+
+    // 提取高亮区域
+    float brightness = dot(FragColor.rgb, vec3(0.2126, 0.7152, 0.0722));
+    if (brightness > 1.0)
+    {
+        BrightColor = vec4(FragColor.rgb, 1.0);
+    }
+    else
+    {
+        BrightColor = vec4(0.0, 0.0, 0.0, 1.0);
+    }
 }

@@ -7,7 +7,7 @@
 class high_dynamic_range : public Window
 {
 private:
-    GLuint _FBO, _TEX;
+    GLuint _FBO, _RBO, _TEX;
     Camera *_camera;
     Mesh *_mesh, *_meshHDR;
     Shader *_shader, *_shaderHDR;
@@ -28,6 +28,7 @@ public:
 high_dynamic_range::~high_dynamic_range()
 {
     glDeleteFramebuffers(1, &_FBO);
+    glDeleteRenderbuffers(1, &_RBO);
     glDeleteTextures(1, &_TEX);
     delete _camera;
     delete _mesh;
@@ -53,15 +54,20 @@ void high_dynamic_range::onInit(GLFWwindow *window)
     glfwGetWindowSize(window, &width, &height);
 
     glGenFramebuffers(1, &_FBO);
+    glBindFramebuffer(GL_FRAMEBUFFER, _FBO);
+    // 纹理缓冲
     glGenTextures(1, &_TEX);
     glBindTexture(GL_TEXTURE_2D, _TEX);
     // 浮点帧缓存: 设定格式为GL_RGB16F/GL_RGB32F等 可以存储超过1.0f的颜色
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, _FBO);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _TEX, 0);
+    // 渲染缓冲附件 深度缓冲
+    glGenRenderbuffers(1, &_RBO);
+    glBindRenderbuffer(GL_RENDERBUFFER, _RBO);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _RBO);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
         std::cout << "Framebuffer is not complete!" << std::endl;
@@ -126,7 +132,7 @@ void high_dynamic_range::onUpdate(GLFWwindow *window)
 
 void high_dynamic_range::processInput(GLFWwindow *window)
 {
-    if (Input::isKeyDown(window, GLFW_KEY_SPACE))
+    if (Input::isKeyDown(window, GLFW_KEY_H))
     {
         _enableHDR = !_enableHDR;
         std::cout << (_enableHDR ? "enable hdr" : "disable hdr") << std::endl;
