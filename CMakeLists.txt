@@ -16,10 +16,12 @@ add_library(glad include/glad.c)
 # 调用FindGLFW3.cmake查找GLFW3头文件和lib 必须找到否则终止构建 找到设置GLFW3_XXX等系列变量
 find_package(GLFW3 REQUIRED)
 find_package(ASSIMP REQUIRED)
+find_package(FREETYPE2 REQUIRED)
 
 # 变量GLFW3_INCLUDE_DIR里存放着GLFW头文件的路径 然后添加头文件搜索目录
 include_directories(${GLFW3_INCLUDE_DIR})
 include_directories(${ASSIMP_INCLUDE_DIR})
+include_directories(${FREETYPE2_INCLUDE_DIR})
 
 #------------------------------------------------------------------------------
 
@@ -32,3 +34,4 @@ add_subdirectory(src/2_lighting)
 add_subdirectory(src/3_model)
 add_subdirectory(src/4_advanced)
 add_subdirectory(src/5_advanced_lighting)
+add_subdirectory(src/7_text)
