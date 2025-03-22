@@ -7,6 +7,7 @@ add_executable(5_normal_mapping 5_normal_mapping.cpp)
 add_executable(6_parallax_mapping 6_parallax_mapping.cpp)
 add_executable(7_hdr 7_hdr.cpp)
 add_executable(8_bloom 8_bloom.cpp)
+add_executable(9_deferred_shading 9_deferred_shading.cpp)
 
 # 链接lib glfw glad.c
 target_link_libraries(1_advanced_lighting ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
@@ -17,3 +18,4 @@ target_link_libraries(5_normal_mapping ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
 target_link_libraries(6_parallax_mapping ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
 target_link_libraries(7_hdr ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
 target_link_libraries(8_bloom ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
+target_link_libraries(9_deferred_shading ${GLFW3_LIBRARY} ${ASSIMP_LIBRARY} glad)
